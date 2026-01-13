@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 
 export default function HomePage() {
 
-  redirect('/dashboard/counter')
+  // Redirecciona hacia el main y no hacia el counter
+  redirect('/dashboard/main')
 
   // Código muerto (no se utiliza)
   return (
