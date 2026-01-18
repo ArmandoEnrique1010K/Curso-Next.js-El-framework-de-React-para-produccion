@@ -21,12 +21,12 @@ export const CartCounter = ({value = 0}: Props) => {
 
             <div className='flex'>
                 <button
-                    className='flex items-center justify-center p-2 rounded-xl bg-gray-900 text-white hover:bg-gray-600 transition-all w-[100px] mr-2'
+                    className='flex items-center justify-center p-2 rounded-xl bg-gray-900 text-white hover:bg-gray-600 transition-all w-[100px] mr-2 cursor-pointer'
                     onClick={() => handleChangeCounter(+1)}
                 >+1</button>
 
                 <button
-                    className='flex items-center justify-center p-2 rounded-xl bg-gray-900 text-white hover:bg-gray-600 transition-all w-[100px] ml-2'
+                    className='flex items-center justify-center p-2 rounded-xl bg-gray-900 text-white hover:bg-gray-600 transition-all w-[100px] ml-2 cursor-pointer'
                     onClick={() => handleChangeCounter(-1)}
                 >-1</button>
             </div>
