@@ -17,7 +17,7 @@ export const NewTodo = () => {
     e.preventDefault();
     if ( description.trim().length === 0 ) return;
 
-    todosApi.createTodo(description);
+    await todosApi.createTodo(description);
     setDescription('');
     router.refresh();
   }
@@ -37,7 +37,7 @@ export const NewTodo = () => {
         className="w-6/12 -ml-10 pl-3 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-sky-500 transition-all"
         placeholder="¿Qué necesita ser hecho?" />
 
-      <button type='submit' className="flex items-center justify-center rounded ml-2 bg-sky-500 p-2 text-white hover:bg-sky-700 transition-all">
+      <button type='submit' className="flex items-center justify-center rounded ml-2  bg-sky-500 p-2 text-white hover:bg-sky-700 transition-all">
         Crear
       </button>
       
@@ -46,7 +46,7 @@ export const NewTodo = () => {
       <button 
         onClick={ () => deleteCompleted() }
         type='button' className="flex items-center justify-center rounded ml-2 bg-red-400 p-2 text-white hover:bg-red-700 transition-all">
-        <IoTrashOutline />
+        <IoTrashOutline size={24}/>
         <span className='ml-2'>Borrar completados</span>
       </button>
 
