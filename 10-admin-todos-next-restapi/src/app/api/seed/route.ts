@@ -23,6 +23,6 @@ export async function GET(request: Request) {
     })
 
     return NextResponse.json({
-        message: 'Seed',
+        message: 'Seed executed',
     })
 }
