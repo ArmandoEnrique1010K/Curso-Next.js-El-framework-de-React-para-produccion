@@ -14,8 +14,8 @@ const sleep = (seconds: number = 0): Promise<boolean> => {
 
 export const updateTodo = async (id: string, complete: boolean): Promise<Todo> => {
 
-  // TODO: 
-  // await sleep(2);
+  // TODO: Ralentiza a 2 segundos
+  await sleep(2);
 
   const body = { complete };
 
@@ -43,8 +43,6 @@ export const createTodo = async (description: string): Promise<Todo> => {
     headers: {
       'Content-Type': 'application/json'
     },
-    // Desactiva el cache del fetch (cada router.refresh() pide datos nuevos)
-    cache: 'no-store',
   }).then(res => res.json());
 
   console.log({ todo });
