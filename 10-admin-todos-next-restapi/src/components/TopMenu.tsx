@@ -3,10 +3,10 @@ import { CiSearch, CiMenuBurger, CiChat1, CiBellOn } from 'react-icons/ci';
 
 export const TopMenu = () => {
   return (
-    <div className="sticky z-10 top-0 h-16 bg-gray-300 lg:py-2.5">
+    <div className="sticky z-10 top-0 h-16 bg-cyan-400 lg:py-2.5">
 
       <div className="px-6 flex items-center justify-between space-x-4">
-        <h5 className="text-2xl text-gray-600 font-medium lg:block">Dashboard</h5>
+        <h5 className="text-2xl font-medium lg:block">Dashboard</h5>
         <button className="w-12 h-16 -mr-2 border-r lg:hidden">
           <CiMenuBurger size={30} />
         </button>

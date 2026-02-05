@@ -25,7 +25,7 @@ const menuItems = [
 
 export const Sidebar = () => {
     return (
-        <aside className="ml-[-100%] fixed z-10 top-0 pb-3 w-full flex flex-col justify-between h-screen bg-cyan-100 transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]">
+        <aside className="ml-[-100%] fixed z-10 top-0 pb-3 w-full flex flex-col justify-between h-screen bg-white border-r-2 border-r-gray-500 transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]">
             <div>
                 <div className="px-6 py-4 bg-white">
                     {/* TODO: Next/Link hacia dashboard */}
@@ -62,7 +62,7 @@ export const Sidebar = () => {
                 </ul>
             </div>
 
-            <div className="px-6 -mx-6 pt-4 flex justify-between items-center">
+            <div className="px-4 pt-4 flex justify-between items-center border-t-2 border-t-gray-500">
                 <button className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
                     <CiLogout size={24}/>
                     <span className="group-hover:text-gray-700">Logout</span>
