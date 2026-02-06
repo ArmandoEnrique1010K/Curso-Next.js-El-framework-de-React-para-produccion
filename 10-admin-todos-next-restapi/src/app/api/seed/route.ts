@@ -19,6 +19,7 @@ export async function GET(request: Request) {
             { description: 'Piedra del tiempo', complete: true },
             { description: 'Piedra del espacio', complete: true },
             { description: 'Piedra de la realidad', complete: true },
+            { description: 'Piedra desconocida' }
         ]
     })
 

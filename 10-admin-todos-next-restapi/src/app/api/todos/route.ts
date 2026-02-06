@@ -1,54 +1,54 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { object } from "yup";
-import * as yup from 'yup';
+import * as yup from "yup";
 
 export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const take = Number(searchParams.get("take") ?? "10");
+  const skip = Number(searchParams.get("skip") ?? "10");
 
-    const { searchParams } = new URL(request.url);
-    const take = Number(searchParams.get('take') ?? '10');
-    const skip = Number(searchParams.get('skip') ?? '10');
+  if (isNaN(take)) {
+    return NextResponse.json(
+      { message: "Take tiene que ser un número" },
+      { status: 400 },
+    );
+  }
 
-    if (isNaN(take)) {
-        return NextResponse.json({ message: 'Take tiene que ser un número' }, { status: 400 })
-    }
+  if (isNaN(skip)) {
+    return NextResponse.json(
+      { message: "Skip tiene que ser un número" },
+      { status: 400 },
+    );
+  }
 
-    if (isNaN(skip)) {
-        return NextResponse.json({ message: 'Skip tiene que ser un número' }, { status: 400 })
-    }
+  const todos = await prisma.todo.findMany({ skip, take });
 
-
-    const todos = await prisma.todo.findMany({ skip, take })
-
-    return NextResponse.json(todos);
+  return NextResponse.json(todos);
 }
 
 const postSchema = yup.object({
-    description: yup.string().required(),
-    complete: yup.boolean().optional().default(false), //! TODO: mostrar algo interesante
-})
-
+  description: yup.string().required(),
+  complete: yup.boolean().optional().default(false),
+});
 
 export async function POST(request: Request) {
+  try {
+    const { description, complete } = await postSchema.validate(
+      await request.json(),
+    );
+    const todo = await prisma.todo.create({ data: { description, complete } });
 
-    try {
-        const { description, complete } = await postSchema.validate(await request.json());
-        const todo = await prisma.todo.create({ data: {  description, complete } })
-
-        return NextResponse.json(todo);
-    } catch (error) {
-        return NextResponse.json(error, { status: 400 });
-    }
+    return NextResponse.json(todo);
+  } catch (error) {
+    return NextResponse.json(error, { status: 400 });
+  }
 }
 
-export async function DELETE(request: Request) { 
-
-    try {
-  
-      await prisma.todo.deleteMany({ where: { complete: true } });
-      return NextResponse.json('Borrados');
-      
-    } catch (error) {
-      return NextResponse.json( error, { status: 400 } );
-    }
+export async function DELETE(request: Request) {
+  try {
+    await prisma.todo.deleteMany({ where: { complete: true } });
+    return NextResponse.json("Borrados");
+  } catch (error) {
+    return NextResponse.json(error, { status: 400 });
   }
+}

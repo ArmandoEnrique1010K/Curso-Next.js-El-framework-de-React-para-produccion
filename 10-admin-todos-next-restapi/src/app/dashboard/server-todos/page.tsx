@@ -11,7 +11,8 @@ export const metadata = {
 
 export default async function ServerTodosPage() {
   const todos = await prisma.todo.findMany({ orderBy: { description: 'asc' } });
-  console.log('construido')
+  // console.log('construido')
+  // fetch('....', { next: { revalidate: 60 } })
 
   return (
     <>
