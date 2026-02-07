@@ -1,7 +1,12 @@
+import { redirect } from 'next/navigation'
+
 export default function Home() {
+
+  redirect('/dashboard');
+
   return (
     <>
-      <span className="tex-5xl">Hola mundo</span>
+      <span className='text-5xl'>Hola Mundo</span>
     </>
-  );
+  )
 }
