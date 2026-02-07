@@ -3,8 +3,8 @@
 import { Todo } from "@/generated/prisma/client";
 import styles from "./TodoItem.module.css";
 import { IoCheckboxOutline, IoSquareOutline } from "react-icons/io5";
-import { startTransition, useOptimistic, useState, useTransition } from "react";
-import { toogleTodo } from "../actions/todo-actions";
+import { /* startTransition, useOptimistic, */ useState, useTransition } from "react";
+// import { toogleTodo } from "../actions/todo-actions";
 import { useRouter } from "next/navigation";
 
 interface Props {

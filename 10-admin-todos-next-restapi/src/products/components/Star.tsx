@@ -1,5 +1,3 @@
-
-
 export const Star = () => {
     return (
       <svg className="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20"

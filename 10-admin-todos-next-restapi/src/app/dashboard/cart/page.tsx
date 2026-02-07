@@ -40,10 +40,9 @@ export default async function CartPage() {
 
   return (
     <div>
-      <h1 className="text-5xl">Productos en el carrito</h1>
-      <hr className="mb-2" />
+      <h1 className="flex mb-4 text-3xl">Productos en el carrito</h1>
 
-      <div className="flex flex-col sm:flex-row gap-2 w-full">
+      <div className="flex flex-col sm:flex-row gap-4 w-full">
         <div className="flex flex-col gap-2 w-full sm:w-8/12">
           {productsInCart.map(({ product, quantity }) => (
             <ItemCard key={product.id} product={product} quantity={quantity} />
