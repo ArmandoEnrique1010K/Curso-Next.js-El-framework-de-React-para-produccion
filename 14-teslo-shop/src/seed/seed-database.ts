@@ -1,6 +1,11 @@
-import prisma from '../lib/prisma';
+import 'dotenv/config';
+import prisma from '../lib/prisma'; // usa el mismo cliente
+
 import { initialData } from './seed';
 import { countries } from './seed-countries';
+
+// Imprime la URL de la base de datos
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
 
 
 
@@ -9,20 +14,19 @@ async function main() {
   // 1. Borrar registros previos
   // await Promise.all( [
 
-  await prisma.orderAddress.deleteMany();
   await prisma.orderItem.deleteMany();
+  await prisma.orderAddress.deleteMany();
   await prisma.order.deleteMany();
-
 
   await prisma.userAddress.deleteMany();
   await prisma.user.deleteMany();
-  await prisma.country.deleteMany();
 
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
+  await prisma.country.deleteMany();
   // ]);
-  
+
   const { categories, products, users } = initialData;
 
 
@@ -40,25 +44,25 @@ async function main() {
   // {
   //   name: 'Shirt'
   // }
-  const categoriesData = categories.map( (name) => ({ name }));
-  
+  const categoriesData = categories.map((name) => ({ name }));
+
   await prisma.category.createMany({
     data: categoriesData
   });
 
-  
+
   const categoriesDB = await prisma.category.findMany();
-  
-  const categoriesMap = categoriesDB.reduce( (map, category) => {
-    map[ category.name.toLowerCase()] = category.id;
+
+  const categoriesMap = categoriesDB.reduce((map, category) => {
+    map[category.name.toLowerCase()] = category.id;
     return map;
   }, {} as Record<string, string>); //<string=shirt, string=categoryID>
-  
-  
+
+
 
   // Productos
 
-  products.forEach( async(product) => {
+  products.forEach(async (product) => {
 
     const { type, images, ...rest } = product;
 
@@ -71,7 +75,7 @@ async function main() {
 
 
     // Images
-    const imagesData = images.map( image => ({
+    const imagesData = images.map(image => ({
       url: image,
       productId: dbProduct.id
     }));
@@ -86,7 +90,7 @@ async function main() {
 
 
 
-  console.log( 'Seed ejecutado correctamente' );
+  console.log('Seed ejecutado correctamente');
 }
 
 
@@ -97,10 +101,10 @@ async function main() {
 
 
 
-( () => {
+(() => {
 
-  if ( process.env.NODE_ENV === 'production' ) return;
+  if (process.env.NODE_ENV === 'production') return;
 
 
   main();
-} )();
+})();

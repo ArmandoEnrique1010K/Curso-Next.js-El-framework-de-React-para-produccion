@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 
@@ -11,7 +11,7 @@ import { currencyFormat } from '@/utils';
 export const PlaceOrder = () => {
 
   const router = useRouter();
-  const [loaded, setLoaded] = useState(false);
+  // const [loaded, setLoaded] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
@@ -22,19 +22,19 @@ export const PlaceOrder = () => {
   const { itemsInCart, subTotal, tax, total } = useCartStore((state) =>
     state.getSummaryInformation()
   );
-  const cart = useCartStore( state => state.cart );
-  const clearCart = useCartStore( state => state.clearCart );
+  const cart = useCartStore(state => state.cart);
+  const clearCart = useCartStore(state => state.clearCart);
 
-  useEffect(() => {
-    setLoaded(true);
-  }, []);
+  // useEffect(() => {
+  //   setLoaded(true);
+  // }, []);
 
 
-  const onPlaceOrder = async() => {
+  const onPlaceOrder = async () => {
     setIsPlacingOrder(true);
     // await sleep(2);
 
-    const productsToOrder = cart.map( product => ({
+    const productsToOrder = cart.map(product => ({
       productId: product.id,
       quantity: product.quantity,
       size: product.size,
@@ -42,8 +42,8 @@ export const PlaceOrder = () => {
 
 
     //! Server Action
-    const resp = await placeOrder( productsToOrder, address);
-    if ( !resp.ok ) {
+    const resp = await placeOrder(productsToOrder, address);
+    if (!resp.ok) {
       setIsPlacingOrder(false);
       setErrorMessage(resp.message);
       return;
@@ -51,17 +51,13 @@ export const PlaceOrder = () => {
 
     //* Todo salio bien!
     clearCart();
-    router.replace('/orders/' + resp.order?.id );
-
-
+    router.replace('/orders/' + resp.order?.id);
   }
 
 
-
-
-  if (!loaded) {
-    return <p>Cargando...</p>;
-  }
+  // if (!loaded) {
+  //   return <p>Cargando...</p>;
+  // }
 
   return (
     <div className="bg-white rounded-xl shadow-xl p-7">
@@ -118,11 +114,11 @@ export const PlaceOrder = () => {
         </p>
 
 
-        <p className="text-red-500">{ errorMessage }</p>
+        <p className="text-red-500">{errorMessage}</p>
 
         <button
           // href="/orders/123"
-          onClick={ onPlaceOrder }
+          onClick={onPlaceOrder}
           className={
             clsx({
               'btn-primary': !isPlacingOrder,

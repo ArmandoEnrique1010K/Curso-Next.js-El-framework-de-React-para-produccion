@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useActionState, useEffect } from 'react';
 import Link from "next/link";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 
 import { authenticate } from "@/actions";
 import { IoInformationOutline } from "react-icons/io5";
@@ -13,18 +13,20 @@ export const LoginForm = () => {
 
 
   // const router = useRouter();
-  const [state, dispatch] = useFormState(authenticate, undefined);
-  
+
+  // NOTA: useFormState ya no existe en React 19, se usa useActionState
+  const [state, dispatch] = useActionState(authenticate, undefined);
+
   console.log(state);
 
   useEffect(() => {
-    if ( state === 'Success' ) {
+    if (state === 'Success') {
       // redireccionar
       // router.replace('/');
       window.location.replace('/');
     }
 
-  },[state]);
+  }, [state]);
 
 
 
@@ -59,7 +61,7 @@ export const LoginForm = () => {
         )}
       </div>
 
-        <LoginButton />
+      <LoginButton />
       {/* <button type="submit" className="btn-primary">
         Ingresar
       </button> */}
@@ -82,14 +84,14 @@ function LoginButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button 
-      type="submit" 
-      className={ clsx({
+    <button
+      type="submit"
+      className={clsx({
         "btn-primary": !pending,
         "btn-disabled": pending
       })}
-      disabled={ pending }
-      >
+      disabled={pending}
+    >
       Ingresar
     </button>
   );

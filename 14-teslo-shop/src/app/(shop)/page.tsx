@@ -10,20 +10,21 @@ import { Pagination, ProductGrid, Title } from '@/components';
 
 interface Props {
   searchParams: {
-    page?: string; 
+    page?: string;
   }
 }
 
 
 export default async function Home({ searchParams }: Props) {
 
-  const page = searchParams.page ? parseInt( searchParams.page ) : 1;
+  const page = searchParams.page ? parseInt(searchParams.page) : 1;
 
   const { products, currentPage, totalPages } = await getPaginatedProductsWithImages({ page });
 
 
-  if ( products.length === 0 ) {
-    redirect('/');
+  if (products.length === 0) {
+    // TODO: ERROR DE BUCLE INFINITO
+    // redirect('/');
   }
 
 
@@ -35,13 +36,13 @@ export default async function Home({ searchParams }: Props) {
         className="mb-2"
       />
 
-      <ProductGrid 
-        products={ products }
+      <ProductGrid
+        products={products}
       />
 
 
-      <Pagination totalPages={ totalPages } />
-      
+      <Pagination totalPages={totalPages} />
+
     </>
   );
 }

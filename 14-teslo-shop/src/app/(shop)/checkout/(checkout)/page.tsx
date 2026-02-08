@@ -12,6 +12,8 @@ export default function CheckoutPage() {
         <Title title="Verificar orden" />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+
+
           {/* Carrito */}
           <div className="flex flex-col mt-5">
             <span className="text-xl">Ajustar elementos</span>

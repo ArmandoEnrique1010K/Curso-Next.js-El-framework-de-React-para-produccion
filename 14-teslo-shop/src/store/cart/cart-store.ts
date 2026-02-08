@@ -4,6 +4,7 @@ import { persist } from "zustand/middleware";
 
 interface State {
   cart: CartProduct[];
+  hasHydrated: boolean;
 
   getTotalItems: () => number;
   getSummaryInformation: () => {
@@ -18,12 +19,14 @@ interface State {
   removeProduct: (product: CartProduct) => void;
 
   clearCart: () => void;
+  setHasHydrated: (hydrated: boolean) => void;
 }
 
 export const useCartStore = create<State>()(
   persist(
     (set, get) => ({
       cart: [],
+      hasHydrated: false,
 
       // Methods
       getTotalItems: () => {
@@ -103,10 +106,19 @@ export const useCartStore = create<State>()(
       clearCart: () => {
         set({ cart: [] });
       },
+
+      // Add to store methods
+      setHasHydrated: (hydrated: boolean) => {
+        set({ hasHydrated: hydrated });
+      },
     }),
 
     {
       name: "shopping-cart",
+      skipHydration: true,
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );
