@@ -9,20 +9,18 @@ interface Props {
   }
 }
 
-
-
 export default async function ProductPage({ params }: Props) {
 
-  const { slug } = params;
+  const { slug } = await params;
 
-  const [ product, categories ] = await Promise.all([
+  const [product, categories] = await Promise.all([
     getProductBySlug(slug),
     getCategories()
   ]);
- 
+
 
   // Todo: new
-  if ( !product && slug !== 'new' ) {
+  if (!product && slug !== 'new') {
     redirect('/admin/products')
   }
 
@@ -30,9 +28,9 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <>
-      <Title title={ title } />
+      <Title title={title} />
 
-      <ProductForm product={ product ?? {} } categories={ categories } />
+      <ProductForm product={product ?? {}} categories={categories} />
     </>
   );
 }

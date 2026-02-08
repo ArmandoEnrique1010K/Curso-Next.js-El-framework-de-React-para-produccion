@@ -1,15 +1,13 @@
 export const revalidate = 0;
 
 // https://tailwindcomponents.com/component/hoverable-table
-import {  getPaginatedOrders } from "@/actions";
+import { getPaginatedOrders } from "@/actions";
 import { Pagination, Title } from "@/components";
-
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { IoCardOutline } from "react-icons/io5";
 
 export default async function OrdersPage() {
-
   const { ok, orders = [] } = await getPaginatedOrders();
 
   if (!ok) {
@@ -76,18 +74,16 @@ export default async function OrdersPage() {
                   )}
                 </td>
                 <td className="text-sm text-gray-900 font-light px-6 ">
-                  <Link href={`/orders/${ order.id }`} className="hover:underline">
+                  <Link href={`/orders/${order.id}`} className="hover:underline">
                     Ver orden
                   </Link>
                 </td>
               </tr>
             ))}
-
-            
           </tbody>
         </table>
 
-        <Pagination totalPages={ 1 } />
+        <Pagination totalPages={1} />
       </div>
     </>
   );

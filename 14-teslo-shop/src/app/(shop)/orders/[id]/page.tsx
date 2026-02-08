@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Image from "next/image";
 
 import { getOrderById } from "@/actions/order/get-order-by-id";
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default async function OrdersByIdPage({ params }: Props) {
-  const { id } = params;
+  const { id } = await params;
 
   // Todo: Llamar el server action
 
@@ -20,6 +20,7 @@ export default async function OrdersByIdPage({ params }: Props) {
 
   if (!ok) {
     redirect("/");
+    // notFound();
   }
 
   const address = order!.OrderAddress;

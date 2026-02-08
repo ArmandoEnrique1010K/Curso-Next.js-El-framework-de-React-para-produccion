@@ -1,14 +1,10 @@
 export const revalidate = 0;
 
 // https://tailwindcomponents.com/component/hoverable-table
-import { getPaginatedOrders, getPaginatedProductsWithImages } from "@/actions";
+import { getPaginatedProductsWithImages } from "@/actions";
 import { Pagination, ProductImage, Title } from "@/components";
 import { currencyFormat } from "@/utils";
-import Image from "next/image";
-
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { IoCardOutline } from "react-icons/io5";
 
 interface Props {
   searchParams: {
@@ -17,7 +13,9 @@ interface Props {
 }
 
 export default async function OrdersPage({ searchParams }: Props) {
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const { page: paramsPage } = await searchParams
+
+  const page = paramsPage ? parseInt(paramsPage) : 1;
 
   const { products, currentPage, totalPages } =
     await getPaginatedProductsWithImages({ page });
@@ -83,7 +81,7 @@ export default async function OrdersPage({ searchParams }: Props) {
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   <Link href={`/product/${product.slug}`}>
                     <ProductImage
-                      src={ product.ProductImage[0]?.url }
+                      src={product.ProductImage[0]?.url}
                       width={80}
                       height={80}
                       alt={product.title}

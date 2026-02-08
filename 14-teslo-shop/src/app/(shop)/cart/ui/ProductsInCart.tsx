@@ -4,24 +4,15 @@ import { useCartStore } from '@/store';
 import { ProductImage, QuantitySelector } from '@/components';
 import Link from 'next/link';
 
-
-
 export const ProductsInCart = () => {
-
   const productsInCart = useCartStore(state => state.cart);
-
   const updateProductQuantity = useCartStore(state => state.updateProductQuantity);
   const removeProduct = useCartStore(state => state.removeProduct);
-
   // const [loaded, setLoaded] = useState(false);
-
 
   // useEffect(() => {
   //   setLoaded(true);
   // }, []);
-
-
-
 
   // if (!loaded) {
   //   return <p>Loading...</p>
