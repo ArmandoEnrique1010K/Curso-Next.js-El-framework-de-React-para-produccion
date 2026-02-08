@@ -1,11 +1,13 @@
 "use client";
 
 import { useSession, signOut, signIn } from "next-auth/react";
+import { BiLogIn } from "react-icons/bi";
 import { CiLogout } from "react-icons/ci";
 import { IoShieldOutline } from "react-icons/io5";
 
 export const LogoutButton = () => {
   const { data: session, status } = useSession();
+  console.log(status)
 
   if (status === "loading") {
     return (
@@ -22,7 +24,7 @@ export const LogoutButton = () => {
         onClick={() => signIn()}
         className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
       >
-        <CiLogout />
+        <BiLogIn size={24} />
         <span className="group-hover:text-gray-700">Ingresar</span>
       </button>
     );
@@ -33,7 +35,7 @@ export const LogoutButton = () => {
       onClick={() => signOut()}
       className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
     >
-      <CiLogout />
+      <CiLogout size={24}/>
       <span className="group-hover:text-gray-700">Logout</span>
     </button>
   );

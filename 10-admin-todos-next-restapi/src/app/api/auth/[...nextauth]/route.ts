@@ -7,7 +7,10 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import { signInEmailPassword } from "@/auth/actions/auth-actions";
+import { signInEmailPassword } from "@/auth/actions/auth-actions"
+import { User } from "@/generated/prisma/client";
+
+
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
@@ -15,11 +18,14 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      // NOTA: Permite que el usuario pueda ingresar en ambos providers con el mismo correo
+      // allowDangerousEmailAccountLinking: true
     }),
 
     GithubProvider({
       clientId: process.env.GITHUB_ID ?? "",
       clientSecret: process.env.GITHUB_SECRET ?? "",
+      // allowDangerousEmailAccountLinking: true
     }),
 
     CredentialsProvider({
@@ -65,9 +71,10 @@ export const authOptions: NextAuthOptions = {
 
     async jwt({ token, user, account, profile }) {
       // console.log({ token });
-      const dbUser = await prisma.user.findUnique({
+      const dbUser = (await prisma.user.findUnique({
         where: { email: token.email ?? "no-email" },
-      });
+      }));
+
       if (dbUser?.isActive === false) {
         throw Error("Usuario no está activo");
       }

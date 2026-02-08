@@ -20,7 +20,7 @@ export const WidgetItem = ({ title, children }: Props) => {
                 <span>2%</span>
               </div> */}
             </div>
-            <span className="block text-center text-gray-500">Compared to last week $13,988</span>
+            {/* <span className="block text-center text-gray-500">Compared to last week $13,988</span> */}
           </div>
         </div>
       </div>

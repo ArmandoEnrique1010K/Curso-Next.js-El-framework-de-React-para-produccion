@@ -53,7 +53,7 @@ export const Sidebar = async () => {
 
   const avatarUrl = session?.user?.image
     ? session.user.image
-    : "https://tailus.io/sources/blocks/stats-cards/preview/images/second_user.webp";
+    : "https://avatars.githubusercontent.com/u/94113125?s=200&v=4";
 
   const userName = session?.user?.name ?? "No Name";
   const userRoles = session?.user?.roles ?? ["client"];
