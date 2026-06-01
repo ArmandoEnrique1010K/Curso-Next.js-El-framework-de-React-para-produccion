@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+/* Definición de variables globales */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* Definición de variables de tema */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* Carga las fuentes personalizadas de google fonts, se utiliza en las clases de 
+  Tailwind CSS como '--font-sans' y '--font-mono' */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* Estilos globales */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  /* Evita que se vean afectados por el cambio de tema */
+  /* font-family: Arial, Helvetica, sans-serif; */
+}
