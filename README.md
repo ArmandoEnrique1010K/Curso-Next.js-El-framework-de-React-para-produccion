@@ -34,3 +34,22 @@ Se utiliza el marketplace oficial de Visual Studio Code porque:
 - Las actualizaciones suelen estar disponibles antes que en otros marketplaces.
 - Algunas extensiones populares no se encuentran disponibles o actualizadas en el marketplace predeterminado de Windsurf.
 - Permite mantener una experiencia más cercana a la de Visual Studio Code.
+
+### Instalar la extensión Tailwind CSS IntelliSense
+
+La extensión **Tailwind CSS IntelliSense** no está disponible actualmente en el marketplace de Windsurf, por lo que debe instalarse manualmente mediante un archivo VSIX.
+
+1. Accede a la siguiente página:
+   https://marketplace.windsurf.com/extension/bradlc/vscode-tailwindcss
+
+2. Haz clic en el botón **Download** para descargar el archivo **.vsix** de la extensión.
+
+3. Abre **Windsurf** y dirígete a la sección **Extensions**.
+
+4. En la parte superior derecha del panel de extensiones, haz clic en el botón **Views and More Actions** (icono de tres puntos).
+
+5. Selecciona la opción **Install from VSIX...**.
+
+6. Busca y selecciona el archivo **.vsix** que descargaste previamente.
+
+Una vez completados estos pasos, Windsurf instalará la extensión automáticamente y podrás disfrutar de autocompletado, sugerencias y soporte para clases de Tailwind CSS.

@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "SEO Title",
   description: "SEO Description",
   // Palabras clave para SEO
+  // Se pueden ver en la etiqueta <meta name="keywords">
   keywords: ["About Page", "Fernando", "SEO"],
 };
 

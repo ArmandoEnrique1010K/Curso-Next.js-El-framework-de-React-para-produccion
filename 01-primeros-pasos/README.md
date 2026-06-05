@@ -1330,3 +1330,226 @@ Solo los elementos que requieren interacción directa del usuario (formularios i
 ```
 
 Por eso es común escuchar que en una aplicación Next.js moderna, más del 90% de los componentes pueden ser Server Components y solo una pequeña parte necesita ejecutarse en el navegador.
+
+# TODO: PENDIENTE SECCIONES 28 Y 29
+
+## Dockerfile para una aplicación Node.js
+
+Docker permite empaquetar una aplicación junto con todas sus dependencias dentro de una imagen. Esa imagen puede ejecutarse en cualquier entorno que tenga Docker instalado, garantizando que la aplicación funcionará de la misma forma independientemente del sistema operativo del host.
+
+La idea es construir una imagen lista para producción, de modo que no sea necesario instalar dependencias manualmente ni configurar el entorno cada vez que se despliega la aplicación.
+
+### Archivo .dockerignore
+
+El archivo `.dockerignore` funciona de forma similar a `.gitignore`.
+
+Su propósito es evitar que Docker copie archivos innecesarios al contexto de construcción, reduciendo el tamaño de la imagen y acelerando el proceso de build.
+
+Ejemplos comunes:
+
+```text
+node_modules
+.next
+.git
+.env
+coverage
+```
+
+### ¿Por qué no copiar node_modules?
+
+Las dependencias instaladas en `node_modules` pueden contener binarios compilados específicamente para el sistema operativo donde fueron instaladas.
+
+Por ejemplo:
+
+- Host: Windows
+- Imagen Docker: Linux
+
+Si se copian directamente, algunos paquetes nativos podrían dejar de funcionar.
+
+Por esta razón las dependencias deben instalarse nuevamente dentro de la imagen utilizando:
+
+```bash
+npm install
+```
+
+o preferiblemente:
+
+```bash
+npm ci
+```
+
+### Dockerfile
+
+#### Imagen base
+
+```dockerfile
+FROM node:20-alpine
+```
+
+Se utiliza una imagen oficial de Node.js basada en Alpine Linux.
+
+Ventajas:
+
+- Menor tamaño.
+- Menor consumo de recursos.
+- Ideal para producción.
+
+#### Directorio de trabajo
+
+```dockerfile
+WORKDIR /app
+```
+
+Define el directorio donde se ejecutarán los siguientes comandos.
+
+Equivale a:
+
+```bash
+cd /app
+```
+
+para todas las instrucciones posteriores.
+
+#### Copiar dependencias
+
+```dockerfile
+COPY package.json package-lock.json ./
+```
+
+Se copian únicamente los archivos necesarios para instalar dependencias.
+
+Esto permite aprovechar el sistema de caché de Docker y evitar reinstalaciones innecesarias.
+
+#### Instalar dependencias
+
+```dockerfile
+RUN npm ci
+```
+
+Instala exactamente las versiones especificadas en `package-lock.json`.
+
+Para producción suele ser preferible a `npm install` porque:
+
+- Es más rápido.
+- Es más reproducible.
+- Evita diferencias entre entornos.
+
+#### Copiar el código fuente
+
+```dockerfile
+COPY . .
+```
+
+Copia el resto de archivos del proyecto dentro de la imagen.
+
+#### Generar build de producción
+
+```dockerfile
+RUN npm run build
+```
+
+Compila la aplicación para producción.
+
+Por ejemplo:
+
+- Next.js genera `.next`
+- React genera `dist`
+- Otros frameworks generan sus propios artefactos
+
+#### Exponer puertos
+
+```dockerfile
+EXPOSE 3000
+```
+
+Documenta que la aplicación utiliza el puerto 3000.
+
+No abre el puerto automáticamente, simplemente informa a Docker y a otros desarrolladores cuál es el puerto utilizado por la aplicación.
+
+#### Comando de inicio
+
+```dockerfile
+CMD ["npm", "start"]
+```
+
+Es el comando que se ejecutará cuando el contenedor sea iniciado.
+
+Normalmente arranca el servidor de producción.
+
+### Construir la imagen
+
+```bash
+docker build -t mi-aplicacion .
+```
+
+Donde:
+
+- `-t` asigna un nombre a la imagen.
+- `.` indica que el Dockerfile se encuentra en el directorio actual.
+
+### Ver imágenes disponibles
+
+```bash
+docker images
+```
+
+Muestra todas las imágenes almacenadas localmente.
+
+### Ejecutar un contenedor
+
+```bash
+docker container run -p 3000:3000 mi-aplicacion
+```
+
+Donde:
+
+- Primer puerto: puerto del host.
+- Segundo puerto: puerto del contenedor.
+
+Ejemplo:
+
+```text
+localhost:3000 → contenedor:3000
+```
+
+### Ejecutar en segundo plano
+
+```bash
+docker container run -dp 3000:3000 mi-aplicacion
+```
+
+Opciones:
+
+- `-d`: modo detached (segundo plano).
+- `-p`: mapeo de puertos.
+
+El contenedor seguirá ejecutándose aunque cierres la terminal.
+
+### Ver contenedores en ejecución
+
+```bash
+docker ps
+```
+
+### Detener un contenedor
+
+```bash
+docker stop ID_CONTENEDOR
+```
+
+Puedes obtener el ID mediante:
+
+```bash
+docker ps
+```
+
+### Nota importante
+
+El Dockerfile mostrado es válido y fácil de entender para aprender Docker, pero no suele ser la mejor opción para producción.
+
+Una práctica más avanzada consiste en utilizar Multi-Stage Builds, donde:
+
+1. Una etapa instala dependencias y genera el build.
+2. Otra etapa contiene únicamente los archivos necesarios para ejecutar la aplicación.
+
+Esto puede reducir considerablemente el tamaño final de la imagen y mejorar la seguridad.

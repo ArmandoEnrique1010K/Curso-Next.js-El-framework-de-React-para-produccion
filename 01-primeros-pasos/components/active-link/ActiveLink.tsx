@@ -21,11 +21,15 @@ export const ActiveLink = ({ path, text }: Props) => {
   // Pero solamente puede ser usado en un componente del lado del cliente
   const pathName = usePathname();
 
+  // Los hooks de React solo pueden ser usados en componentes del lado del cliente
   // Para que no muestre un error se tiene que colocar 'use client' en la primera linea del archivo
   // Y se vuelve un componente del lado del cliente
 
   // Posibles valores de pathName (solo toma uno a la vez): /about, /contact, /pricing
   console.log(pathName);
+
+  // Imprime 6 veces el pathName porque se renderiza 3 veces el componente ActiveLink
+  // Y se imprime un mensaje por segunda vez porque Next.js utiliza React Strict Mode en modo de desarrollo
 
   // useRouter es un hook de Next.js que permite acceder a la instancia de router
   const router = useRouter();
@@ -50,6 +54,11 @@ export const ActiveLink = ({ path, text }: Props) => {
 
       // En Next.js 13 ese comportamiento de carga la página al pasar el mouse sobre el enlace era automatico
       // En la actualidad se debe hacer de manera manual tal y como se ha mencionado anteriormente
+
+      // Para ver el efecto de prefetch, abre las herramientas de desarrollo del navegador (F12)
+      // Ve a la pestaña Network, luego de ir a la ruta 'http://localhost:3000/about', haz clic en el
+      // icono de 'Clear Network Log' (simbolo de nulo) para limpiar la lista de peticiones, luego pasa
+      // el mouse sobre los enlaces y veras que se carga la página sin necesidad de hacer clic
     >
       {text}
     </Link>

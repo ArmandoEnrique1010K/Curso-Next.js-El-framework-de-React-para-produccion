@@ -1,0 +1,110 @@
+# Docker permite empaquetar una aplicación junto con todas sus dependencias 
+# dentro de una imagen que puede ejecutarse en cualquier máquina que tenga Docker.
+
+# El objetivo es construir una imagen lista para producción. 
+# Una vez creada, solamente será necesario iniciar un contenedor 
+# basado en dicha imagen para ejecutar la aplicación.
+
+# El archivo .dockerignore evita que Docker copie archivos innecesarios 
+# al contexto de construcción (node_modules, .git, logs, etc.). 
+# Esto reduce el tamaño de la imagen y acelera el proceso de build. 
+
+# No es recomendable copiar node_modules desde el host. 
+# Algunas dependencias contienen binarios compilados específicamente 
+# para el sistema operativo donde fueron instaladas.
+
+# Como la mayoría de imágenes Docker ejecutan Linux, 
+# las dependencias deben instalarse nuevamente dentro de la imagen. 
+
+# El Dockerfile contiene las instrucciones que Docker ejecutará 
+# paso a paso para construir la imagen final.
+
+
+
+
+# Utiliza una imagen oficial de Node.js basada en Alpine Linux. 
+# Alpine es una distribución ligera que ayuda a reducir 
+# el tamaño final de la imagen.
+FROM node:20-alpine
+
+
+# Define el directorio de trabajo dentro del contenedor. 
+# Todas las instrucciones posteriores se ejecutarán desde aquí.
+WORKDIR /app
+
+
+# Copia el package.json desde el proyecto local 
+# hacia el directorio de trabajo del contenedor.
+COPY package.json /
+
+
+# Instala las dependencias necesarias para ejecutar la aplicación. 
+# Estas dependencias se instalan dentro de la imagen Linux, 
+# garantizando compatibilidad con el entorno final.
+RUN npm install
+
+
+# Copia el resto de archivos del proyecto al contenedor.
+COPY . ./
+
+
+# Genera la versión optimizada para producción. 
+# Por ejemplo, en Next.js se genera la carpeta .next.
+RUN npm run build
+
+
+# Documenta que la aplicación utilizará el puerto 3000. 
+# EXPOSE no abre el puerto automáticamente; 
+# simplemente indica cuál será utilizado por la aplicación.
+EXPOSE 3000
+
+# Comando que se ejecutará al iniciar un contenedor 
+# basado en esta imagen.
+CMD ["npm", "start"]
+
+
+# Esta configuración es sencilla y útil para aprender Docker, 
+# pero no suele ser la más eficiente para producción. 
+# En aplicaciones reales suele utilizarse Multi-Stage Build 
+# para reducir significativamente el tamaño de la imagen. 
+
+# Construir la imagen: 
+# docker build -t nombre-de-la-imagen . 
+
+# Ejemplo: 
+# docker build -t mi-app . 
+
+
+# Si hay algún error, se detiene la construcción de la imagen
+
+# En docker desktop, si te vas a la sección de images, verás la imagen 
+# que acabas de construir. Puedes tener una imagen de al menos 780 MB
+
+
+# Ver imágenes disponibles: 
+# docker images 
+
+
+# ¿Que se hace con la imagen?
+# Se ejecuta un contenedor basado en la imagen: 
+# docker container run -p 3000:3000 nombre-de-la-imagen 
+
+# Ejemplo: 
+# docker container run -p 3000:3000 mi-app 
+
+
+# Si aparece un mensaje indicando que el servidor está escuchando:
+# "ready started server on 0.0.0.0:3000, url: http://localhost:3000"
+# La aplicación se encuentra ejecutándose correctamente en modo producción. 
+
+
+# Detener el contenedor actual: 
+# CTRL + C 
+
+
+# Ejecutar el contenedor en segundo plano: 
+# docker container run -dp 3000:3000 nombre-de-la-imagen 
+
+# -d = detached (segundo plano) 
+# -p = mapeo de puertos host:contenedor
+

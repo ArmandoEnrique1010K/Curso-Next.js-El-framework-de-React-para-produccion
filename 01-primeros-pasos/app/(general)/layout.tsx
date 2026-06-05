@@ -10,17 +10,20 @@ export default function GeneralLayout({
     // y dentro de esa carpeta se coloca el archivo layout.tsx
 
     // Luego todas las paginas que se encuentren dentro de esa carpeta, heredaran el layout y podran ser accedidos desde
-    // container/about --> layout container, pagina about
-    // container/contact
-    // container/pricing
+    // /container/about --> layout container, pagina about
+    // /container/contact
+    // /container/pricing
 
     // Pero si quieres quitar el nombre de la carpeta del path, debes crear una carpeta cuyo nombre se encunetre en parentesis
     // por ejemplo: (general)/layout.tsx
 
     // y todas las paginas que se encuentren dentro de esa carpeta, heredaran el layout y podran ser accedidos desde
-    // general/about --> layout general, pagina about
-    // general/contact
-    // general/pricing
+    // /about --> layout general, pagina about
+    // /contact
+    // /pricing
+
+    // Pero desde la barra de direcciones del navegador no se muestra el nombre de la carpeta, por lo que la ruta sera:
+    // localhost:3000/about --> layout general, pagina about
 
     // Cada componente de Next.js debe devolver un unico elemento padre
     <>
