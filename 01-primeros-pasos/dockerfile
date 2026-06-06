@@ -1,70 +1,159 @@
 # Esta configuración es la recomendada por el equipo de Next.js
 # https://nextjs.org/docs/pages/getting-started/deploying#docker-image
-# https://github.com/vercel/next.js/tree/canary/examples/with-docker
+
+# Codigo fuente obtenido de:
+# https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+
+# El siguiente código esta dispuesto a cambios, por lo que se recomienda copiar
+# el código desde el enlace anterior.
 
 
-# syntax=docker.io/docker/dockerfile:1
-FROM node:20-alpine AS base
 
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# Requiere habilitar la salida standalone en next.config.ts:
+#
+# export default {
+#   output: 'standalone'
+# }
+
+# ============================================
+# Etapa 1: Instalación de Dependencias
+# ============================================
+
+# IMPORTANTE: Mantener la versión de Node.js actualizada
+# Este Dockerfile utiliza Node.js 24.13.0-slim, que era la versión LTS más reciente en el momento de escribir.
+# Para asegurar seguridad y compatibilidad, actualiza regularmente el ARG NODE_VERSION a la versión LTS más reciente.
+
+
+# Versión de Node.js a utilizar
+ARG NODE_VERSION=24.13.0-slim
+
+# Imagen base de Node.js
+FROM node:${NODE_VERSION} AS dependencies
+
+# Directorio de trabajo
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
+# Copiar archivos relacionados con paquetes para aprovechar el caché de Docker
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
+
+# Instalar dependencias del proyecto con lockfile frozen para builds reproducibles
+RUN --mount=type=cache,target=/root/.npm \
+  --mount=type=cache,target=/usr/local/share/.cache/yarn \
+  --mount=type=cache,target=/root/.local/share/pnpm/store \
+  if [ -f package-lock.json ]; then \
+  npm ci --no-audit --no-fund; \
+  elif [ -f yarn.lock ]; then \
+  corepack enable yarn && yarn install --frozen-lockfile --production=false; \
+  elif [ -f pnpm-lock.yaml ]; then \
+  corepack enable pnpm && pnpm install --frozen-lockfile; \
+  else \
+  echo "No lockfile found." && exit 1; \
   fi
 
+# Si no haces ninguna modificación en el código fuente, puedes usar la caché de Docker
+# para acelerar los builds.
 
-# Rebuild the source code only when needed
-FROM base AS builder
+# ============================================
+# Etapa 2: Construir la aplicación de Next.js en modo standalone
+# ============================================
+
+# 
+FROM node:${NODE_VERSION} AS builder
+
+# Directorio de trabajo
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+
+# Copiar dependencias del proyecto desde la etapa dependencies
+COPY --from=dependencies /app/node_modules ./node_modules
+
+# Copiar código fuente de la aplicación
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
+# Variable de entorno para producción
+ENV NODE_ENV=production
+
+
+# Next.js recopila datos de telemetría completamente anónimos sobre el uso general.
+# Más información: https://nextjs.org/telemetry
+
+# Descomenta la siguiente línea si deseas deshabilitar la telemetría
+# durante el proceso de construcción (build).
 # ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
+
+# Construir la aplicación de Next.js
+# Si deseas acelerar futuras reconstrucciones de Docker, puedes cachear
+# los artefactos generados durante el build agregando:
+# --mount=type=cache,target=/app/.next/cache
+
+# Esto almacena el contenido de .next/cache entre builds.
+# Sin embargo, también evita que .next/cache/fetch-cache sea incluido
+# en la imagen final, por lo que las respuestas cacheadas mediante fetch
+# durante el build no estarán disponibles en tiempo de ejecución.
+RUN if [ -f package-lock.json ]; then \
+  npm run build; \
+  elif [ -f yarn.lock ]; then \
+  corepack enable yarn && yarn build; \
+  elif [ -f pnpm-lock.yaml ]; then \
+  corepack enable pnpm && pnpm build; \
+  else \
+  echo "No lockfile found." && exit 1; \
   fi
 
-# Production image, copy all the files and run next
-FROM base AS runner
+# ============================================
+# Etapa 3: Ejecutar la aplicación de Next.js
+# ============================================
+
+FROM node:${NODE_VERSION} AS runner
+
+# Directorio de trabajo
 WORKDIR /app
 
+# Variables de entorno para producción
 ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Next.js recopila datos de telemetría completamente anónimos sobre el uso general.
+# Más información: https://nextjs.org/telemetry
+
+# Descomenta la siguiente línea si deseas deshabilitar la telemetría
+# durante la ejecución de la aplicación.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Copiar los activos de producción
+COPY --from=builder --chown=node:node /app/public ./public
 
-COPY --from=builder /app/public ./public
+# Establecer el permiso correcto para el caché de prerender
+RUN mkdir .next
+RUN chown node:node .next
 
-# Automatically leverage output traces to reduce image size
+# Copiar el servidor standalone y los archivos estáticos
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 
-USER nextjs
+# Si deseas conservar la caché de fetch generada durante la construcción
+# para que las respuestas cacheadas estén disponibles inmediatamente al iniciar
+# la aplicación, descomenta la siguiente línea:
+# COPY --from=builder --chown=node:node /app/.next/cache ./.next/cache
 
+# Cambiar al usuario no privilegiado (no-root) siguiendo buenas prácticas de seguridad.
+USER node
+
+# Exponer el puerto 3000 para recibir tráfico HTTP
 EXPOSE 3000
 
-ENV PORT=3000
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
-ENV HOSTNAME="0.0.0.0"
+# Iniciar el servidor standalone de Next.js
 CMD ["node", "server.js"]
+
+
+# Recuerda el comando para construir la imagen:
+# docker build -t mi-app . 
+
+# Los pasos en la terminal ahora se ven que estan en cache
+# La segunda vez que haces el build, la construcción es mucho más rápida
+
+# En docker desktop tendras una imagen de al menos 200 MB
+
+# Ejecuta "docker container run -dp 3000:3000 mi-app" para ejecutar el contenedor

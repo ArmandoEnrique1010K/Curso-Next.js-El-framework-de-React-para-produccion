@@ -29,7 +29,7 @@ export default function GeneralLayout({
     <>
       {/* Observa que al importar el componente Navbar, se acorta el path en import */}
       <Navbar />
-      <main className="flex flex-col items-center p-24">
+      <main className="flex flex-col items-center p-24 text-center">
         <span className="text-lg">Hola Mundo</span>
         {/* Children es el contenido de la pagina que va a tener el layout */}
         {children}

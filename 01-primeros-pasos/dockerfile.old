@@ -92,6 +92,10 @@ CMD ["npm", "start"]
 # Ejemplo: 
 # docker container run -p 3000:3000 mi-app 
 
+# Si aparece una ventana que dice "firewall de windows bloqueo algunas 
+# caracteristicas de docker desktop backend", solamente haz clic en
+# "Permitir Acceso"
+
 
 # Si aparece un mensaje indicando que el servidor está escuchando:
 # "ready started server on 0.0.0.0:3000, url: http://localhost:3000"
