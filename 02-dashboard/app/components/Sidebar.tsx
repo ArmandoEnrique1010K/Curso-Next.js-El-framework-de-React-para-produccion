@@ -1,5 +1,10 @@
 import Image from "next/image";
-import { IoBrowsersOutline, IoCalculator, IoLogoReact } from "react-icons/io5";
+import {
+  IoBrowsersOutline,
+  IoCalculator,
+  IoFootball,
+  IoLogoReact,
+} from "react-icons/io5";
 import { SidebarMenuItem } from "./SidebarMenuItem";
 
 // Menú de la barra lateral
@@ -17,6 +22,12 @@ const menuItems = [
     title: "Counter",
     subTitle: "Contador del lado del cliente",
   },
+  {
+    path: "/dashboard/pokemons",
+    icon: <IoFootball size={40} />,
+    title: "Pokemons",
+    subTitle: "Generación estática de páginas",
+  },
 ];
 
 // Barra lateral del dashboard
@@ -26,7 +37,10 @@ export const Sidebar = () => {
       id="menu"
       // Ancho estático
       style={{ width: "400px" }}
-      className="bg-gray-900 min-h-screen z-10 text-slate-300 w-64 left-0 h-screen overflow-y-scroll"
+      // La propiedad h-screen hace que el elemento tenga la altura de la pantalla, pero como hay
+      // elementos que se desbordan, se usa overflow-y-auto para que se muestre la barra de scroll cuando
+      // sea necesario
+      className="bg-gray-900 min-h-screen z-10 text-slate-300 w-64 left-0 overflow-y-auto"
     >
       <div id="logo" className="my-4 px-6">
         <h1 className="flex items-center text-lg md:text-2xl font-bold text-white">
