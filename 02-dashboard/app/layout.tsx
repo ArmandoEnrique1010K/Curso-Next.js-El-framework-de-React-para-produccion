@@ -40,3 +40,17 @@ export default function RootLayout({
 // └ ○ /dashboard/main
 
 // ○  (Static)  prerendered as static content
+
+// Aqui hay un comportamiento diferente, porque la ruta /dashboard/pokemon/[id] es dinámica
+// y por lo tanto no se puede prerenderizar como static content
+
+// Route (app)
+// ┌ ○ /
+// ├ ○ /_not-found
+// ├ ○ /dashboard/counter
+// ├ ○ /dashboard/main
+// ├ ƒ /dashboard/pokemon/[id]
+// └ ○ /dashboard/pokemons
+
+// ○  (Static)   prerendered as static content
+// ƒ  (Dynamic)  server-rendered on demand

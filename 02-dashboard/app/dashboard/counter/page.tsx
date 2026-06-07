@@ -1,7 +1,10 @@
 // Escribe 'prc' y presiona ENTER para generar el código base
 // Debes tener instala la extensión "Snippets simple Next.js 13"
 
-import { CartCounter } from "@/app/shopping-cart";
+// Recordar que todo lo que se encuentre dentro de la carpata 'app' deben ser paginas web,
+// layouts y páginas de error que son componentes del lado del servidor y se renderizan una sola vez
+
+import { CartCounter } from "@/shopping-cart";
 
 // // "use client";
 
@@ -27,7 +30,7 @@ export default function CounterPage() {
   // const [count, setCount] = useState(0);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full">
+    <div className="flex flex-col items-center justify-center w-full h-full p-2">
       <span>Productos en el carrito</span>
 
       {/* Toda esta parte del contador es del lado del cliente */}

@@ -3,9 +3,9 @@
 // Pulsa el botón de Show Code para ver el código
 
 import Link from "next/link";
-import { SimplePokemon } from "../interfaces/simple-pokemon";
 import Image from "next/image";
 import { IoHeartOutline } from "react-icons/io5";
+import { SimplePokemon } from "../interfaces/simple-pokemon";
 
 interface Props {
   pokemon: SimplePokemon;
@@ -53,7 +53,7 @@ export const PokemonCard = ({ pokemon }: Props) => {
           <div className="mt-5">
             {/* Enlace para ver más información del pokémon */}
             <Link
-              href={`/pokemons/${id}`}
+              href={`/dashboard/pokemon/${id}`}
               className="border rounded-full py-2 px-4 text-xs font-semibold text-gray-100"
             >
               Más información

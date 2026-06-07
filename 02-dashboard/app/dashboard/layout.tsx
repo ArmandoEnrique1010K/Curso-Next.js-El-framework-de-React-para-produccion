@@ -1,11 +1,11 @@
 // Componentes de React construidos con Tailwind CSS
 // https://www.creative-tim.com/twcomponents/component/dashboard-navigation
 
+import { Sidebar } from "@/components";
+
 // Puedes hacer clic en la opción 'Show code' para ver el código fuente y copiarlo
 // Recordar reemplazar el atributo class por className
 // Pulsa CTRL + H y reemplaza la palabra 'class' por 'className'
-
-import { Sidebar } from "../components";
 
 // Layout para el dashboard
 export default function DashboardLayout({
@@ -19,7 +19,7 @@ export default function DashboardLayout({
         {/* Contenido del menú lateral */}
         <Sidebar />
         {/* Contenido principal */}
-        <div className="p-2 w-full text-slate-900">{children}</div>
+        <div className="w-full text-slate-900">{children}</div>
       </div>
     </div>
   );

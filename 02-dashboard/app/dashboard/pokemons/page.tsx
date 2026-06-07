@@ -4,7 +4,7 @@
 // Obtener datos desde una API o base de datos.
 // https://nextjs.org/docs/app/getting-started/fetching-data
 
-import { PokemonGrid, PokemonResponse, SimplePokemon } from "@/app/pokemons";
+import { PokemonGrid, PokemonResponse, SimplePokemon } from "@/pokemons";
 import { notFound } from "next/navigation";
 // import Image from "next/image";
 
@@ -155,7 +155,7 @@ const getPokemons = async (
 
   // Fuerza a lanzar un error (recuerda que es un componente del lado del servidor)
   // throw new Error("Esto es un error que no debería de suceder");
-  throw notFound();
+  // throw notFound();
 
   // Cuando se crea la página o contenido estatico puede ocurrir un error
   // https://nextjs.org/docs/app/getting-started/error-handling
@@ -174,7 +174,7 @@ export default async function PokemonsPage() {
   // y se muestra la respuesta en el navegador
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col p-2 ">
       <span className="text-5xl my-2">
         Listado de Pokemons <small>estático</small>
       </span>
