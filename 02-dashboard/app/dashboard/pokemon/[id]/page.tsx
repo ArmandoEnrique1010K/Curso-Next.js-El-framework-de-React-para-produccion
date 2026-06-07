@@ -54,11 +54,13 @@ const getPokemon = async (id: string): Promise<Pokemon> => {
     const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
       // Establecemos el cache force-cache para que no se vuelva a consultar la API
       // cache: "force-cache",
+      // Revalidamos cada 30 días, luego de ese tiempo se revalida la información sin
+      // necesidad de hacer un hard refresh
       next: {
-        // Revalidamos cada 30 días, luego de ese tiempo se revalida la información sin
-        // necesidad de hacer un hard refresh
-        revalidate: 60 * 60 * 24 * 30, // 30 días
+        revalidate: 60 * 60 * 24 * 30,
       },
+
+      // No mezclar force-cache con revalidate porque el revalidate sobrescribe el force-cache
     }).then((res) => res.json());
 
     // Imprime en la consola del servidor el nombre del pokemon
@@ -92,6 +94,70 @@ const getPokemon = async (id: string): Promise<Pokemon> => {
     notFound();
   }
 };
+
+// GENERACIÓN ESTATICA DE PÁGINAS
+// Si se tiene una base de datos con 1000 pokemones, se puede generar las páginas de forma
+// estática, para que esten generadas en el servidor y no se tengan que generar en tiempo de ejecución
+// Carga más rápida, mejor SEO, mejor UX
+
+// Genera un arreglo con 151 elementos undefined
+// Array.from({length: 151})
+
+// Genera un arreglo, donde cada elemento es un numero incremental desde 1 hasta 151
+// Array.from({length: 151}).map((_, i) => i + 1)
+
+// Generar 151 páginas antes de que la persona la solicite
+// generateStaticParams es una función de next.js, se ejecuta en build time (tiempo de compilación)
+
+// Escribe gsp y pulsa enter para generar código en Windsurf
+export async function generateStaticParams() {
+  // Generar 10 páginas de ejemplo
+  // return [
+  //   { id: "1" },
+  //   { id: "2" },
+  //   { id: "3" },
+  //   { id: "4" },
+  //   { id: "5" },
+  //   { id: "6" },
+  //   { id: "7" },
+  //   { id: "8" },
+  //   { id: "9" },
+  //   { id: "10" },
+  // ];
+
+  // Luego de ejecutar un npm run build, ve a la siguiente carpeta:
+  // .next/server/app/dashboard/pokemon y veras que hay 10 archivos html generados
+
+  // Si ejecutas npm run start y haces scroll hacia abajo, veras que en la carpeta pokemon
+  // (de la misma ruta anterior) se crean archivos HTML de forma dinamica, es decir, antes
+  // de que el usuario visite la página que muestre un pokemon por ID, estos archivos ya
+  // estan generados
+
+  // Esto mejora la experiencia del usuario
+
+  // Generar las 151 páginas de los pokemones
+  const static151Pokemons = Array.from({ length: 151 }).map(
+    (_, i) => `${i + 1}`,
+  );
+
+  return static151Pokemons.map((id) => ({
+    // id: id
+    id,
+  }));
+
+  // Pero hay un problema, cuando el usuario ingresa a una página que no existe,
+  // por ejemplo /dashboard/pokemon/999, la página se genera dinamicamente
+  // en el servidor como '999.html' en '.next/server/app/dashboard/pokemon'
+
+  // Si otro usuario ingresa a la misma página, la página ya existe y se muestra
+  // inmediatamente, sin necesidad de generarla de nuevo
+
+  // Si hay un 'revalidate', en la función global fetch, la página se vuelve
+  // a generar después del tiempo especificado
+  //   next: {
+  //   revalidate: 60 * 60 * 24 * 30,
+  // },
+}
 
 // La metadata tambien debe ser dinamica
 // La función generateMetadata es asincrona y recibe los parametros dinamicos

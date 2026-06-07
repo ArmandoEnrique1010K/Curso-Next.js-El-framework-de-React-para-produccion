@@ -5,7 +5,8 @@
 // https://nextjs.org/docs/app/getting-started/fetching-data
 
 import { PokemonGrid, PokemonResponse, SimplePokemon } from "@/pokemons";
-import { notFound } from "next/navigation";
+import { cacheLife, cacheTag, revalidateTag } from "next/cache";
+// import { notFound } from "next/navigation";
 // import Image from "next/image";
 
 // En documentación actual de Next.js 16, todo lo relacionado a
@@ -165,8 +166,64 @@ const getPokemons = async (
   return pokemons;
 };
 
+export const metadata = {
+  title: "151 Pokemons",
+  description: "Todos los pokemons",
+};
+
 // Si vas a utilizar un await dentro de una función, debes declararla como async
 export default async function PokemonsPage() {
+  // CACHE COMPONENTS
+  // Next.js 16 ofrece otras opciones para el manejo del cache
+  // 'use cache' es una directiva como 'use client' o 'use server'
+  // https://nextjs.org/docs/app/getting-started/caching
+
+  // Permite basicamente hacer cualquier función cacheable, es decir que
+  // se pueda ejecutar una sola vez y luego se cachea, la solicitud se obtiene
+  // del cache en lugar de ejecutar la función nuevamente
+
+  // Se puede usar para data que no cambia con frecuencia, como por ejemplo
+  // la lista de pokemons
+
+  // Hay 3 formas:
+  // A nivel de archivo: coloca 'use cache' en la primera linea de codigo,
+  // A nivel de componente: coloca 'use cache' antes de definir el procedimiento
+  // de la función principal del componente
+  // A nivel de función; coloca 'use cache' en la primera linea de una función
+  // como por ejemplo, una función fetch
+
+  // Primero se realiza una configuración en next.config.ts
+  // const nextConfig: NextConfig = {
+  //   cacheComponents: true,
+  // };
+
+  "use cache";
+
+  // La primera vez que se genera el HTML, se cachea y luego se usa el cache
+  // en lugar de volver a generar el HTML
+
+  // Añade un componente <Suspense> al componente padre que es layout.tsx si vas
+  // a usar 'use cache' en esta página
+
+  // Más información en el archivo 'app\dashboard\random\page.tsx'
+  cacheLife({
+    stale: 10,
+    revalidate: 60,
+  });
+
+  // Permite asignar una 'etiqueta' al cache
+  // Se mantiene en cache la parte que tiene la etiqueta
+  // Hasta que en alguna otra parte se tenga que revalidar
+  // cacheTag("pokemons");
+
+  // Función para revalidar cache por etiqueta
+  // max = El contenido obsoleto se sirve mientras que el contenido nuevo se obtiene en segundo plano
+  // revalidateTag("pokemons", "max");
+
+  // No puedes usar 'use cache' y 'cacheTag' en la misma página o componente al mismo tiempo
+
+  //
+
   // Llamada a la API
   const pokemons = await getPokemons(151);
 

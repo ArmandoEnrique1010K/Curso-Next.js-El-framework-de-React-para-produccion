@@ -19,6 +19,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  // Solamente funciona en la version 16 de next.js para los componentes cacheables
+  cacheComponents: true,
 };
 
 export default nextConfig;

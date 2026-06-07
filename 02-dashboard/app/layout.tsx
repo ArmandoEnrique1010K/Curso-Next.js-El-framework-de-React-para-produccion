@@ -54,3 +54,41 @@ export default function RootLayout({
 
 // ○  (Static)   prerendered as static content
 // ƒ  (Dynamic)  server-rendered on demand
+
+// Si hubiera la función generateStaticParams, entonces las páginas dinámicas se prerenderizarían como static content
+// Route (app)
+// ┌ ○ /
+// ├ ○ /_not-found
+// ├ ○ /dashboard/counter
+// ├ ○ /dashboard/main
+// ├ ● /dashboard/pokemon/[id]
+// │ ├ /dashboard/pokemon/1
+// │ ├ /dashboard/pokemon/2
+// │ ├ /dashboard/pokemon/3
+// │ └ [+7 more paths]
+// └ ○ /dashboard/pokemons
+
+// ○  (Static)  prerendered as static content
+// ●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+
+// Generación de páginas estáticas para 151 pokemones tanto por su ID como por su nombre
+// La propiedad revalidate sirve para indicar cada cuánto tiempo se debe regenerar la página
+// Route (app)                        Revalidate  Expire
+// ┌ ○ /
+// ├ ○ /_not-found
+// ├ ○ /dashboard/counter
+// ├ ○ /dashboard/main
+// ├ ● /dashboard/pokemon/[id]               30d      1y
+// │ ├ /dashboard/pokemon/1                  30d      1y
+// │ ├ /dashboard/pokemon/2                  30d      1y
+// │ ├ /dashboard/pokemon/3                  30d      1y
+// │ └ [+148 more paths]
+// ├ ○ /dashboard/pokemons
+// └ ● /dashboard/pokemons/[name]            30d      1y
+//   ├ /dashboard/pokemons/bulbasaur         30d      1y
+//   ├ /dashboard/pokemons/ivysaur           30d      1y
+//   ├ /dashboard/pokemons/venusaur          30d      1y
+//   └ [+148 more paths]
+
+// ○  (Static)  prerendered as static content
+// ●  (SSG)     prerendered as static HTML (uses generateStaticParams)

@@ -2,6 +2,7 @@
 // https://www.creative-tim.com/twcomponents/component/dashboard-navigation
 
 import { Sidebar } from "@/components";
+import { Suspense } from "react";
 
 // Puedes hacer clic en la opción 'Show code' para ver el código fuente y copiarlo
 // Recordar reemplazar el atributo class por className
@@ -19,7 +20,11 @@ export default function DashboardLayout({
         {/* Contenido del menú lateral */}
         <Sidebar />
         {/* Contenido principal */}
-        <div className="w-full text-slate-900">{children}</div>
+        <div className="w-full text-slate-900">
+          {/* Se recomienda que el children esté dentro de un componente Suspense si hay un 'use cache' en la página */}
+          {/* En fallback se define un componente que se mostrará mientras se carga el children */}
+          <Suspense fallback={<div>Cargando...</div>}>{children}</Suspense>
+        </div>
       </div>
     </div>
   );
