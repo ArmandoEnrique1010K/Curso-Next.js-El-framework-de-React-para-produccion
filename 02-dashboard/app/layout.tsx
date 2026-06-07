@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+// import { Provider } from "react-redux";
+// import { store } from "@/store";
+import { Providers } from "@/store/Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +30,40 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {/* {children} */}
+
+        {/* 
+          MANEJO DEL ESTADO GLOBAL
+          https://redux-toolkit.js.org/introduction/getting-started
+          Redux Toolkit es una librería que facilita el uso de Redux en aplicaciones React
+          Permite manejar el estado de la aplicación de manera más sencilla y eficiente
+          Se recomienda usar Redux Toolkit en lugar de Redux puro
+
+          Ejecuta el comando: npm install @reduxjs/toolkit react-redux
+
+          Provider de 'react-redux' ocupa un HOC (Higher Order Component) para envolver la aplicación
+          Cualquier componente que necesite acceder al store debe estar dentro de este HOC
+
+          El problema es que se quiere crear un contexto y debe ser un componente del lado del cliente
+          con 'use client'
+
+          Pero si colocas un 'use client' en el layout.tsx, entonces todos los componentes que estén
+          dentro de este layout serán del lado del cliente, no será permitido renderizar del lado del servidor
+        */}
+
+        {/* <Provider store={store}>{children}</Provider> */}
+
+        {/* Para aquello crea un archivo Providers.tsx dentro de la carpeta store */}
+        {/* Y luego importa el componente Providers en este archivo */}
+        <Providers>{children}</Providers>
+
+        {/* Aunque es una solución temporal, funciona, pero no es la mejor práctica */}
+
+        {/* Para mandar información generada del lado del servidor al redux, se tiene que hacer
+        mediante un action que se ejecute en el cliente, hay un punto intermedio entre el servidor
+        y el cliente */}
+      </body>
     </html>
   );
 }

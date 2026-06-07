@@ -37,7 +37,9 @@ export default function CounterPage() {
       {/* <CartCounter /> */}
 
       {/* Puedes mandar props desde un componente del lado del servidor a un componente del lado del cliente */}
-      <CartCounter value={10} />
+      {/* USO DEL ESTADO GLOBAL
+      Debe ser un componente del lado del cliente */}
+      <CartCounter value={20} />
     </div>
   );
 }

@@ -57,7 +57,7 @@ export default async function RandomPage() {
   const bytes = crypto.getRandomValues(new Uint8Array(16));
 
   return (
-    <div>
+    <div className="p-2">
       <p>{random}</p>
       <p>{now}</p>
       <p>{date.getTime()}</p>

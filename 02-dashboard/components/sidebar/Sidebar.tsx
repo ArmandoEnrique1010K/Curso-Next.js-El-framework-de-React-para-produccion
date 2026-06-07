@@ -3,9 +3,11 @@ import {
   IoBrowsersOutline,
   IoCalculator,
   IoFootball,
+  IoHeartOutline,
   IoLogoReact,
 } from "react-icons/io5";
 import { SidebarMenuItem } from "./SidebarMenuItem";
+import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 
 // Menú de la barra lateral
 const menuItems = [
@@ -27,6 +29,18 @@ const menuItems = [
     icon: <IoFootball size={40} />,
     title: "Pokemons",
     subTitle: "Generación estática de páginas",
+  },
+  {
+    path: "/dashboard/random",
+    icon: <GiPerspectiveDiceSixFacesRandom size={40} />,
+    title: "Random",
+    subTitle: "Uso de use cache",
+  },
+  {
+    path: "/dashboard/favorites",
+    icon: <IoHeartOutline size={40} />,
+    title: "Favoritos",
+    subTitle: "Estado global",
   },
 ];
 
@@ -71,7 +85,8 @@ export const Sidebar = () => {
 
             {/* Requiere las propiedades necesarias: src, width, height y alt */}
             <Image
-              src="https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=128&q=80"
+              // src="https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=128&q=80"
+              src="https://avatars.githubusercontent.com/u/96834667?v=4"
               width={50}
               height={50}
               alt="ArmandoEnrique1010k"
