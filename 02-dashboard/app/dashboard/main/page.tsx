@@ -7,6 +7,8 @@ export const metadata = {
 };
 
 export default function MainPage() {
+  // Si recargas el navegador y estas en esta página, el contador se reiniciará
+  // porque el estado global se pierde y toma el valor definido en el slice
   return (
     <div className="text-black p-2">
       <h1 className="mt-2 text-3xl ">Dashboard</h1>

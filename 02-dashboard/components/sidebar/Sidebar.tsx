@@ -64,11 +64,11 @@ export const Sidebar = () => {
           <span className="text-blue-500">8</span>.
         </h1>
         <p className="text-slate-500 text-sm">
-          Manage your actions and activities
+          Gestiona tus acciones y actividades
         </p>
       </div>
       <div id="profile" className="px-6 py-10">
-        <p className="text-slate-500">Welcome back,</p>
+        <p className="text-slate-500">Bienvenido otra vez,</p>
         <a href="#" className="inline-flex space-x-2 items-center">
           <span>
             {/* Recuerda que las etiquetas HTML abiertas deben cerrarse */}

@@ -6,6 +6,7 @@ import { useAppSelector } from "@/store";
 
 export const WidgetsGrid = () => {
   // Utiliza el estado de counter del store
+  // Toma el estado de counter.count
   const inCart = useAppSelector((state) => state.counter.count);
 
   return (

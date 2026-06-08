@@ -128,3 +128,30 @@ export default function RootLayout({
 
 // ○  (Static)  prerendered as static content
 // ●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+
+// Generación de páginas de todo el proyecto, ahora hay páginas estáticas y dinámicas
+// Además de un endpoint API
+// Partial Pretender (PPR) - Renderizado híbrido que tiene partes estáticas y dinámicas
+// Route (app)                        Revalidate  Expire
+// ┌ ○ /
+// ├ ○ /_not-found
+// ├ ƒ /api/counter
+// ├ ○ /dashboard/counter
+// ├ ○ /dashboard/favorites                   1m      1y
+// ├ ○ /dashboard/main
+// ├ ◐ /dashboard/pokemon/[id]               30d      1y
+// │ ├ /dashboard/pokemon/[id]               30d      1y
+// │ ├ /dashboard/pokemon/1                  30d      1y
+// │ ├ /dashboard/pokemon/2                  30d      1y
+// │ └ [+149 more paths]
+// ├ ○ /dashboard/pokemons                    1m      1y
+// ├ ◐ /dashboard/pokemons/[name]            30d      1y
+// │ ├ /dashboard/pokemons/[name]            30d      1y
+// │ ├ /dashboard/pokemons/bulbasaur         30d      1y
+// │ ├ /dashboard/pokemons/ivysaur           30d      1y
+// │ └ [+149 more paths]
+// └ ○ /dashboard/random                     10s      1d
+
+// ○  (Static)             prerendered as static content
+// ◐  (Partial Prerender)  prerendered as static HTML with dynamic server-streamed content
+// ƒ  (Dynamic)            server-rendered on demand

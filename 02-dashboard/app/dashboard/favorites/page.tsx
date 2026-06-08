@@ -1,4 +1,4 @@
-import { PokemonGrid, PokemonResponse, SimplePokemon } from "@/pokemons";
+import { FavoritePokemons } from "@/pokemons";
 import { cacheLife } from "next/cache";
 
 export const metadata = {
@@ -21,7 +21,11 @@ export default async function PokemonsPage() {
       </span>
 
       <div className="flex flex-wrap gap-10 items-center justify-center">
-        <PokemonGrid pokemons={[]} />
+        {/* El componente FavoritePokemons se encarga de obtener los pokemons favoritos, es un
+        componente del lado del cliente porque se va a utilizar el store de Redux y como este
+        componente tiene metadata si o si debe ser un componente del lado del servidor */}
+        {/* <PokemonGrid pokemons={[]} /> */}
+        <FavoritePokemons />
       </div>
     </div>
   );

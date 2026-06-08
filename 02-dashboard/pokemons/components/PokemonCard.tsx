@@ -1,11 +1,15 @@
+"use client";
+
 // Componente generado de TailwindComponents, obtenido de
 // https://www.creative-tim.com/twcomponents/component/user-card-7
 // Pulsa el botón de Show Code para ver el código
 
 import Link from "next/link";
 import Image from "next/image";
-import { IoHeartOutline } from "react-icons/io5";
+import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import { SimplePokemon } from "../interfaces/simple-pokemon";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { toggleFavorite } from "@/store/pokemons/pokemonsSlice";
 
 interface Props {
   pokemon: SimplePokemon;
@@ -14,6 +18,30 @@ interface Props {
 // Recordar que los componentes no deben ser exportados por defecto
 export const PokemonCard = ({ pokemon }: Props) => {
   const { id, name } = pokemon;
+
+  // Recordar que las interacciones con redux, contextAPI o cualquier libreria de state management
+  // Se realizan a traves de los reducers y deben encontrase en componentes del lado del cliente
+
+  // Verifica si el pokemon con el id especificado esta en el estado de los favoritos
+  // Coloca doble negación (!!) para convertir el valor a booleano
+  // const isFavorite = useAppSelector((state) => !!state.pokemons[id]);
+  const isFavorite = useAppSelector((state) => !!state.pokemons.favorites[id]);
+
+  // Prueba a imprimir y veras que sale un error si no tienes un 'use client' en el componente
+  // Si no hay un error debe imprimir 1 (true) o varios (false) dependiendo de la cantidad de veces
+  // que se renderiza el componente PokemonCard (por cada pokemon)
+  // console.log(isFavorite);
+
+  const dispatch = useAppDispatch();
+
+  // Función auxiliar para alternar el favorito
+  const onToggle = () => {
+    // Imprime el objeto con el pokemon completo
+    // console.log("click", pokemon);
+
+    // Llama al reducer para alternar el favorito
+    dispatch(toggleFavorite(pokemon));
+  };
 
   return (
     <div className="mx-auto right-0 mt-2 w-60">
@@ -65,20 +93,26 @@ export const PokemonCard = ({ pokemon }: Props) => {
         </div>
         <div className="">
           {/* En NextJS 13+ no se puede usar <a> dentro de <Link> (de next/link) */}
-          <Link
-            href="/account/campaigns"
-            className="px-4 py-2 hover:bg-gray-100 flex items-center"
+          {/* cursor-pointer cambia el tipo de cursor a mano cuando se pasa el mouse sobre el elemento */}
+          <div
+            // Llama a la acción
+            onClick={onToggle}
+            className="px-4 py-2 hover:bg-gray-100 flex items-center cursor-pointer"
           >
             <div className="text-red-600">
-              <IoHeartOutline />
+              {/* Icono con borde y con color de relleno  */}
+              {/* <IoHeartOutline /> */}
+              {/* <IoHeart /> */}
+
+              {isFavorite ? <IoHeart /> : <IoHeartOutline />}
             </div>
             <div className="pl-3">
               <p className="text-sm font-medium text-gray-800 leading-none">
-                No es favorito
+                {isFavorite ? "Es favorito" : "No es favorito"}
               </p>
-              <p className="text-xs text-gray-500">View your campaigns</p>
+              <p className="text-xs text-gray-500">Click para cambiar</p>
             </div>
-          </Link>
+          </div>
         </div>
       </div>
     </div>

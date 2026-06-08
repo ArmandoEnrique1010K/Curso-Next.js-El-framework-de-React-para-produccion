@@ -1,18 +1,38 @@
 // Fuente central del estado global
 // Código fuente obtenido de: https://redux-toolkit.js.org/tutorials/quick-start#create-a-redux-store
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, Middleware } from "@reduxjs/toolkit";
 
 // Importa el slice de contador
 import counterReducer from "./counter/counterSlice";
 
+// Importa el slice de pokemons
+import pokemonsReducer from "./pokemons/pokemonsSlice";
+
 import { useDispatch, useSelector } from "react-redux";
+import { localStorageMiddleware } from "./middlewares/localstorage-middleware";
 
 export const store = configureStore({
   reducer: {
     // Aquí se definirán los reducers, que son como los slices o hojas del estado
     // Sintaxis recomentada: nombreDelSlice: reducerRespectivo
     counter: counterReducer,
+    pokemons: pokemonsReducer,
   },
+
+  // Aqui se ejecutan los middlewares
+  // middleware: (getDefaultMiddleware) =>
+  //   getDefaultMiddleware().concat(localStorageMiddleware as Middleware),
+
+  // Forma alternativa de definir los middlewares
+  // middleware: (getDefaultMiddleware) =>
+  //   getDefaultMiddleware({
+  //     thunk: {
+  //       // Aqui se especifica el argumento extra que se pasa a los thunks
+  //       extraArgument: localStorageMiddleware,
+  //     },
+  //     // Desactiva la verificación de serialización para permitir objetos no serializables
+  //     serializableCheck: false,
+  //   }),
 });
 
 // En las herramientas del navegador, se puede ver el estado de la aplicación
