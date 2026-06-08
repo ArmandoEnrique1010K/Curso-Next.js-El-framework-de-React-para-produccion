@@ -1,71 +1,122 @@
+// PRISMA ORM
+// https://www.prisma.io/docs/orm/v6/overview/introduction/what-is-prisma
+// Prisma es un ORM (Object-Relational Mapping) que permite interactuar con la base de datos 
+// de manera más sencilla.
+// Sirve para modelar objetos que representan las tablas de la base de datos, evitando escribir
+// consultas SQL o queries.
+
+// Incluye:
+// - Prisma Client (genera el código para interactuar con la base de datos)
+// - Prisma Migrate (genera las migraciones) 
+// - Prisma Studio (interfaz gráfica para interactuar con la base de datos)
+
+// GUIA DE PRISMA ORM
+// https://vercel.com/kb/guide/nextjs-prisma-postgres
+
+// Ejecuta el comando 'npx prisma init' para inicializar Prisma
+// El comando creara el archivo .env que contiene la URL de la base de datos y la carpeta prisma
+
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
 
+// Provider de postgresql que se conecta a la base de datos
 datasource db {
   provider = "postgresql"
 }
 
+// 
+
+// MODELADO DE TABLAS
+
+// Modelo que representa la tabla de la base de datos, en este caso una tarea
 model Todo {
+  // Utiliza la tabulación para definir los campos de la tabla
+  // El campo id es de tipo string
+  // @id sirve para definir que el campo es la llave primaria
+  // @default(uuid()) genera un UUID automáticamente y lo utiliza como valor por defecto
   id          String   @id @default(uuid())
   description String
   complete    Boolean  @default(false)
+  // DateTime es un tipo de dato que representa una fecha y hora
+  // @default(now()) genera la fecha actual automáticamente y lo utiliza como valor por defecto
   createdAt   DateTime @default(now())
+  // @updatedAt actualiza la fecha automáticamente cuando se actualiza el registro
   updatedAt   DateTime @updatedAt
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
 }
 
-model Account {
-  id                String  @id @default(uuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
+// Cada vez que se quiera hacer un cambio en el modelado de tablas, se tiene que hacer una 
+// migración para que los cambios se reflejen en la base de datos
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+// Para aquello ejecuta el comando `npx prisma migrate dev`, a su vez te pedira un nombre
+// para la migración (el nombre es libre, pero se recomienda ser descriptivo)
 
-  @@unique([provider, providerAccountId])
-}
+// Abre DBeaver y revisa si se ha creado las tablas correspondientes a los modelos
 
-model Session {
-  id           String   @id @default(uuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
+// Luego ejecuta `npx prisma generate` para generar el cliente de prisma para hacer
+// las manipulaciones con la base de datos
 
-model User {
-  id            String    @id @default(uuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
+// Pero para trabajar con Next.js se recomienda crear un archivo de configuración
+// en la carpeta src/lib/prisma.ts
 
-  roles    String[] @default(["user"])
-  isActive Boolean  @default(true)
-  password String?
+// Vuelve a ejecutar `npx prisma generate` para confirmar los cambios
 
-  accounts Account[]
-  sessions Session[]
+// 
 
-  todos Todo[]
-}
+// 
+// user   User   @relation(fields: [userId], references: [id])
+// userId String
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+// model Account {
+//   id                String  @id @default(uuid())
+//   userId            String
+//   type              String
+//   provider          String
+//   providerAccountId String
+//   refresh_token     String? @db.Text
+//   access_token      String? @db.Text
+//   expires_at        Int?
+//   token_type        String?
+//   scope             String?
+//   id_token          String? @db.Text
+//   session_state     String?
 
-  @@unique([identifier, token])
-}
+//   // user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@unique([provider, providerAccountId])
+// }
+
+// model Session {
+//   id           String   @id @default(uuid())
+//   sessionToken String   @unique
+//   // userId       String
+//   expires      DateTime
+//   // user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
+
+// model User {
+//   id            String    @id @default(uuid())
+//   name          String?
+//   email         String?   @unique
+//   emailVerified DateTime?
+//   image         String?
+
+//   // roles    String[] @default(["user"])
+//   isActive Boolean @default(true)
+//   password String?
+
+//   // accounts Account[]
+//   // sessions Session[]
+
+//   // todos Todo[]
+//   todos Todo[]
+// }
+
+// model VerificationToken {
+//   identifier String
+//   token      String   @unique
+//   expires    DateTime
+
+//   @@unique([identifier, token])
+// }

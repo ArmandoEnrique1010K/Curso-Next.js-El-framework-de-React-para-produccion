@@ -1,14 +1,51 @@
+# Abre Docker Desktop
+# En este caso se va a trabajar con postgres como base de datos
+
+# Crea el archivo docker-compose.yaml en la raíz del proyecto, sirve para definir las instrucciones
+# de como se van a crear las imagenes. Usa la tabulación para indentar
+
+# Código fuente obtenido de: https://gist.github.com/Klerith/1a6a78e4cd4e86368d679bcfc55d9ec7
+# Versión del archivo
 version: '3'
 
+# Servicios
 services:
   todosDB:
+    # Imagen de postgres (en el caso de no haber descargado la imagen, se descargará automáticamente)
     image: postgres:15.3
+    # Nombre del contenedor
     container_name: todos-db
+    # Reiniciar el contenedor si se cae
     restart: always
+    # Puerto (por defecto 5432)
     ports:
       - 5432:5432
+    # Variables de entorno (user y password)
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    # Volumes (conecta una carpeta local con la carpeta de postgres)
+    # Crea la carpeta 'postgres' en la raíz del proyecto
     volumes:
       - ./postgres:/var/lib/postgresql/data
+
+# Ejecuta en la terminal el comando: docker-compose up -d
+# '-d' lo hace de forma desatachada (en segundo plano)
+
+# Al ejecutarlo creara 2 contenedores: '03-admin-todos' y 'todos-db'
+
+# Abre DBeaver, crea una nueva conexión a PostgreSQL
+# Host: localhost
+# Port: 5432
+# Database: postgres
+# User: postgres
+# Password: postgres
+
+# Pulsa el botón "Test Connection" para probar la conexión
+# Si todo está bien, pulsa el botón "Finish"
+
+# Se creará la conexión en DBeaver, cuya base de datos será 'postgres'
+
+# No olvides de añadir '/postgres' en el archivo .gitignore
+
+# Para detenerlo ve a Docker Desktop, busca el contenedor 'todos-db' y presiona el botón 'Stop'

@@ -30,8 +30,6 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
 
 # vercel
 .vercel
@@ -41,3 +39,14 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+# A PARTIR DE AQUI SE MODIFICO EL ARCHIVO .gitignore
+
+# Ignorar la carpeta de PostgreSQL que se crea al ejecutar el comando de Docker
+postgres/
+
+# Variables de entorno
+# No ignorar todos los archivos que comiencen con .env
+# .env* 
+# Solamente debe ignorar ese archivo
+.env 

@@ -1,0 +1,154 @@
+{
+  "info": {
+    "_postman_id": "35a2ac10-a0bb-4bb5-bb86-53ade1e15284",
+    "name": "NextJS - Admin Todos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "35943406"
+  },
+  "item": [
+    {
+      "name": "TODOS",
+      "item": [
+        {
+          "name": "[ID]",
+          "item": [
+            {
+              "name": "GET",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/todos/32a55b52-92b9-4572-a849-0bcac9a7c5a2",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "todos",
+                    "32a55b52-92b9-4572-a849-0bcac9a7c5a2"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "UPDATE",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"description\": \"Desde el endpoint 2\",\r\n    \"complete\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/todos/32a55b52-92b9-4572-a849-0bcac9a7c5a2",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "todos",
+                    "32a55b52-92b9-4572-a849-0bcac9a7c5a2"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/todos?skip=0&take=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "todos"
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "take",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CREATE",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"description\": \"Conquistar el mundo\",\r\n    \"complete\": true,\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/todos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "todos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "SEED",
+      "item": [
+        {
+          "name": "GET",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/api/seed",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "seed"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
