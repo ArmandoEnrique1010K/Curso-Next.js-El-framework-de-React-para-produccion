@@ -4,8 +4,11 @@ import { Todo } from "@/generated/prisma/client";
 import { TodoItem } from "./TodoItem";
 
 // Importa todas las funciones del archivo todos.ts (dentro de la carpeta helpers)
-import * as todosapi from "@/todos/helpers/todos";
+// import * as todosapi from "@/todos/helpers/todos";
 import { useRouter } from "next/navigation";
+
+// Importa el server action y utilizalo en el bóton
+import { toogleTodo } from "../actions/todo-actions";
 
 // El tipo 'Todo' es generado por prisma, cuando se ejecuta el comando 'prisma generate'
 interface Props {
@@ -17,21 +20,25 @@ export const TodosGrid = ({ todos = [] }: Props) => {
   // Toma useRouter de next/navigation
   const router = useRouter();
 
+  // AQUI NO SE HACE EL USO DE SERVER ACTION, SINO EL USO DE
+  // REST API
   // Función auxiliar para cambiar el estado de una tarea
-  const toogleTodo = async (id: string, complete: boolean) => {
-    // Verifica que exista id y complete
-    // console.log({ id, complete });
+  // const toogleTodo = async (id: string, complete: boolean) => {
+  //   // Verifica que exista id y complete
+  //   // console.log({ id, complete });
 
-    const updatedTodo = await todosapi.updateTodo(id, complete);
+  //   const updatedTodo = await todosapi.updateTodo(id, complete);
 
-    console.log({ updatedTodo });
+  //   console.log({ updatedTodo });
 
-    // Debe recargar la ruta actual y Next.js lo hace de tal manera de que solamente va a actualizar
-    // los componentes afectados
+  //   // Debe recargar la ruta actual y Next.js lo hace de tal manera de que solamente va a actualizar
+  //   // los componentes afectados
 
-    // Con router.refresh() se recarga la ruta actual
-    router.refresh();
-  };
+  //   // Con router.refresh() se recarga la ruta actual
+  //   router.refresh();
+  // };
+
+  //
 
   // Por cada tarea, se renderiza un componente TodoItem
   return (
@@ -45,9 +52,13 @@ export const TodosGrid = ({ todos = [] }: Props) => {
         // Ahora si haces clic en el botón, se actualiza la lista de tareas (puede demorar
         // en marcar la tarea como completada, para aquello verifica la consola del
         // servidor)
-        <TodoItem key={todo.id} todo={todo} toggleTodo={toogleTodo} />
+        // <TodoItem key={todo.id} todo={todo} toggleTodo={toogleTodo} />
+
         // Con ello no se pierden los estados de los componentes cuando se recarga la página
         // Ve a SidebarItem y descomenta el estado de 'counter' y la función 'setCounter'
+
+        // USO DEL SERVER ACTION EN LUGAR DE LA FUNCIÓN REST
+        <TodoItem key={todo.id} todo={todo} toggleTodo={toogleTodo} />
       ))}
     </div>
   );

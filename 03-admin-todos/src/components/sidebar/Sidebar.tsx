@@ -60,8 +60,10 @@ export const Sidebar = async () => {
             <Image
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7RDEtPGvqNOxsei62fAUnKqBZkR5tyrOilA&s"
               alt="tailus logo"
-              width={200}
+              width={500}
               height={200}
+              // Como la imagen es grande se utiliza la propiedad loading
+              loading="eager"
             />
           </Link>
         </div>
@@ -71,8 +73,9 @@ export const Sidebar = async () => {
             src="https://avatars.githubusercontent.com/u/94113125"
             width={150}
             height={150}
-            alt=""
+            alt="Logo de tailus"
             className="w-10 h-10 m-auto rounded-full object-cover lg:w-28 lg:h-28"
+            loading="eager"
           />
         </div>
 
