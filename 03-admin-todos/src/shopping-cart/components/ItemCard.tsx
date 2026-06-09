@@ -13,16 +13,18 @@ interface Props {
   quantity: number;
 }
 
+// Item del carrito de compras
 export const ItemCard = ({ product, quantity }: Props) => {
   const router = useRouter();
 
+  // Funciones auxiliares para agregar y eliminar item del carrito
   function onAddToCart() {
-    TODO: addProductToCart(product.id);
+    addProductToCart(product.id);
     router.refresh();
   }
 
   function onRemoveItem() {
-    TODO: removeSingleItemFromCart(product.id);
+    removeSingleItemFromCart(product.id);
     router.refresh();
   }
 

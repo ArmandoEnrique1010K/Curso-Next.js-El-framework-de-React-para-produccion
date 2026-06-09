@@ -59,7 +59,7 @@ export default async function ServerTodosPage() {
 
   return (
     <>
-      <span className="flex mb-4 text-3xl">Server Action</span>
+      <span className="flex mb-4 text-3xl">Server Actions</span>
       <div className="w-full  mb-5">
         <NewTodo />
       </div>

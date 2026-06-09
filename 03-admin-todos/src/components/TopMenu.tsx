@@ -7,8 +7,37 @@ import {
   CiShoppingBasket,
 } from "react-icons/ci";
 
-// cookies es una promesa
 export const TopMenu = async () => {
+  // Como es un server components, tienes acceso a las cookies
+  // cookies es una promesa
+  const cookieStore = await cookies();
+  const cart = JSON.parse(cookieStore.get("cart")?.value ?? "{}");
+
+  // Calcular el total de items en el carrito
+  // const getTotalCount = (): number => {
+  //   let items = 0;
+
+  //   // Como el carrito es un objeto, recorremos sus propiedades
+  //   Object.values(cart).forEach((value) => {
+  //     items += value as number;
+  //   });
+
+  //   return items;
+  // };
+
+  // Función optimizada para calcular el total
+  const getTotalCount = (cart: { [id: string]: number }): number => {
+    let items = 0;
+
+    Object.values(cart).forEach((value) => {
+      items += value as number;
+    });
+
+    return items;
+  };
+
+  const totalItems = getTotalCount(cart);
+
   return (
     <div className="sticky z-10 top-0 h-16 bg-cyan-400 lg:py-2.5">
       <div className="px-6 flex items-center justify-between space-x-4">
@@ -39,10 +68,20 @@ export const TopMenu = async () => {
             <CiChat1 size={25} />
           </button>
 
+          {/* Botón para ver el carrito de compras */}
           <Link
             href={"/dashboard/cart"}
             className="p-2 flex items-center justify-center h-10 rounded-xl bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
           >
+            {/* Cantidad de items */}
+            {/* <span className="text-sm mr-2 text-blue-800 font-bold">
+              {totalItems}
+            </span> */}
+            {totalItems > 0 && (
+              <span className="text-sm mr-2 text-blue-800 font-bold">
+                {totalItems}
+              </span>
+            )}
             <CiShoppingBasket size={25} />
           </Link>
         </div>

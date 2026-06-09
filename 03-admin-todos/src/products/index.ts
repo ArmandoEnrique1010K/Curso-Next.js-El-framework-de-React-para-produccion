@@ -1,2 +1,1 @@
-
-export { ProductCard } from './components/ProductCard';
+export { ProductCard } from "./components/ProductCard";

@@ -11,12 +11,10 @@ export default function DashboardLayout({
     <>
       <Sidebar />
 
-      <div className="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%] min-h-screen">
+      <div className="ml-auto lg:w-[75%] xl:w-[80%] 2xl:w-[85%] min-h-screen bg-gray-100">
         <TopMenu />
 
-        <div className="px-6 pt-12 bg-white p-2 m-2 pb-5 rounded">
-          {children}
-        </div>
+        <div className="px-6 pt-4 bg-white m-4 pb-5 rounded">{children}</div>
       </div>
     </>
   );
