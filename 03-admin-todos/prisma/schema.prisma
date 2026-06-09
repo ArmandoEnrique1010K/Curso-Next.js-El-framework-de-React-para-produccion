@@ -62,9 +62,53 @@ model Todo {
 
 // Vuelve a ejecutar `npx prisma generate` para confirmar los cambios
 
-// 
+// PRISMA CLI
+// https://www.prisma.io/docs/orm/reference/prisma-cli-reference
 
-// 
+// Al ejecutar `npx prisma db push`, se toma la definición del schema.prisma y la sincroniza con la base de datos
+// `db pull` sirve para conectar la base de datos existente y añade los modelos correspondientes al schema.prisma,
+// sirve cuando se tiene la base de datos creada y se quiere generar los modelos correspondientes
+
+// En DBeaver crea la tabla Employee con los campos:
+// Haz doble clic en la tabla para abrir el editor de la tabla, ve a la pestaña propiedades y en la sección columnas
+// pulsa ALT + INSERT para agregar una nueva columna
+
+// Nombre       Tipo de dato      Collation     ¿nulo?      Valor por defecto
+// id           serial            default       NO        
+// name         varchar                         NO         
+// isadmin      boolean                         NO          false
+// createdAt    timestamp                       NO          NOW()
+
+// Puedes ejecutar el siguiente script en DBeaver
+/**
+ * CREATE TABLE Employee (
+ * id SERIAL PRIMARY KEY,
+ * name VARCHAR(255),
+ * is_admin BOOLEAN DEFAULT FALSE,
+ * created_at TIMESTAMP DEFAULT NOW()
+ * );
+ */
+
+// Ahora ejecuta en la consola `npx prisma db pull` y escribe automaticamente el siguiente código:
+// Pero elimina todos los comentarios escritos en schema.prisma (este archivo)
+model employee {
+  id         Int       @id @default(autoincrement())
+  name       String?   @db.VarChar(255)
+  is_admin   Boolean?  @default(false)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  // Luego ejecuta `npx prisma generate` para generar el cliente de prisma
+
+  // Puedes hacer modificaciones a la tabla
+  // Por ejemplo, agregar un campo roles que sea un array de strings
+  roles String[] @default([])
+
+  // Pero al ejecutar `npx prisma migrate dev` se mostrara una advertencia de que todos los datos se perderán
+  // además de añadir la columna roles a la tabla
+
+  // Pero si ejecutas `npx prisma db push` hace la sincronizacion de la base de datos sin pasar por las migraciones
+  // Solamente se utiliza para pruebas en la base de datos, antes de ejecutar un `npx prisma db pull`
+}
+
 // user   User   @relation(fields: [userId], references: [id])
 // userId String
 

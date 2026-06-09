@@ -23,6 +23,10 @@ export async function GET(request: Request) {
   // delte * from todo
   await prisma.todo.deleteMany();
 
+  // Recuerda que si no aparece el modelo employee en el schema.prisma
+  // debes ejecutar `npx prisma generate` para que se actualice
+  // await prisma.employee.deleteMany();
+
   // createMany inserta múltiples registros en una sola consulta
   await prisma.todo.createMany({
     data: [

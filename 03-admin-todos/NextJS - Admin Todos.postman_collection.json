@@ -123,6 +123,26 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "DELETE",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/todos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "todos"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },

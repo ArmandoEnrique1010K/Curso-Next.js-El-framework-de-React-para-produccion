@@ -1,4 +1,3 @@
-import { getUserSessionServer } from "@/auth/actions/auth-actions";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -151,37 +150,16 @@ export async function POST(request: Request) {
   }
 }
 
-// const { description, complete } = await postSchema.validate(
-//   await request.json(),
-// );
-// const todo = await prisma.todo.create({
-//   data: {
-//     description,
-//     complete,
-//   },
-// });
-
-// const user = await getUserSessionServer();
-
-// if (!user) {
-//   return NextResponse.json("No autorizado", { status: 401 });
-// }
-
+// Método para borrar todas las tareas completadas
 export async function DELETE(request: Request) {
-  const user = await getUserSessionServer();
-
-  if (!user) {
-    return NextResponse.json("No autorizado", { status: 401 });
-  }
-
   try {
+    // deleteMany sirve para borrar varios registros por condición
     await prisma.todo.deleteMany({
       where: {
         complete: true,
-        // userId: user.id
       },
     });
-    return NextResponse.json("Borrados");
+    return NextResponse.json("Tareas borradas");
   } catch (error) {
     return NextResponse.json(error, { status: 400 });
   }

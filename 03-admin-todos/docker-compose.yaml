@@ -29,6 +29,8 @@ services:
     volumes:
       - ./postgres:/var/lib/postgresql/data
 
+# Abre docker desktop
+
 # Ejecuta en la terminal el comando: docker-compose up -d
 # '-d' lo hace de forma desatachada (en segundo plano)
 
