@@ -38,6 +38,7 @@ export default async function DashboardPage() {
           <span>{session.user?.name}</span>
           <span>{session.user?.email ?? "Sin email"}</span>
 
+          {/* Solamente si haz creado una GitHub App en lugar de una OAuth App en GitHub */}
           {/* Si el email es null, y quieres mostrar el email del usuario que ha iniciado sesion */}
           {/* Debes hacer una configuracion en github con respecto a los permisos de la aplicación */}
           {/* 1. Ve a tu cuenta de GitHub, haz clic en tu perfil y selecciona Settings > Developer Settings > OAuth Apps.
