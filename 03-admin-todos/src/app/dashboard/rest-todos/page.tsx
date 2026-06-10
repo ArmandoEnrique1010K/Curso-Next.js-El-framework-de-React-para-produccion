@@ -1,8 +1,10 @@
 // export const dynamic = "force-dynamic";
 // export const revalidate = 0;
 
+import { getUserSessionServer } from "@/auth/actions/auth-actions";
 import prisma from "@/lib/prisma";
 import { NewTodo, TodosGrid } from "@/todos";
+import { redirect } from "next/navigation";
 // import { useEffect } from "react";
 
 export const metadata = {
@@ -11,6 +13,10 @@ export const metadata = {
 };
 
 export default async function RestTodosPage() {
+  // Obten la sesion actual
+  const user = await getUserSessionServer();
+  if (!user) redirect("/api/auth/signin");
+
   // Si usas un useEffect no puedes usar metadata (metadata es para Server Components)
   // useEffect(() => {
   //   fetch("/api/todos")
@@ -21,6 +27,10 @@ export default async function RestTodosPage() {
   // Aprovecha la generación del lado del servidor y cada vez que se cree esta
   // página se hace un llamada a la base de datos
   const todos = await prisma.todo.findMany({
+    // Condicion para listar tareas por usuario por ID
+    where: {
+      userId: user.id,
+    },
     // Ordena las tareas por descripción de manera ascendente (a-z)
     orderBy: { description: "asc" },
   });

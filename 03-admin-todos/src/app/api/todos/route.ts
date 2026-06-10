@@ -1,3 +1,4 @@
+import { getUserSessionServer } from "@/auth/actions/auth-actions";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -84,6 +85,16 @@ export async function POST(request: Request) {
 
   //
 
+  // Obten la sesion del usuario
+  const user = await getUserSessionServer();
+
+  if (!user) {
+    return NextResponse.json(
+      { message: "Usuario no autenticado" },
+      { status: 401 },
+    );
+  }
+
   // Toma el body, validado con yup, en el caso de que no cumpla la validación, lanza un error
   // y ese error debe ser capturado con un try-catch
   try {
@@ -99,6 +110,8 @@ export async function POST(request: Request) {
       data: {
         complete,
         description,
+        // Necesita el userId para que la tarea sea asociada al usuario
+        userId: user.id!,
       },
 
       // Si le mandas el ID, no lanzara un error porque el ID no lo toma en ninguna
@@ -152,11 +165,23 @@ export async function POST(request: Request) {
 
 // Método para borrar todas las tareas completadas
 export async function DELETE(request: Request) {
+  // Obten la sesion del usuario
+  const user = await getUserSessionServer();
+
+  if (!user) {
+    return NextResponse.json(
+      { message: "Usuario no autenticado" },
+      { status: 401 },
+    );
+  }
+
   try {
     // deleteMany sirve para borrar varios registros por condición
     await prisma.todo.deleteMany({
       where: {
         complete: true,
+        // No olvidar filtrar tareas por el ID del usuario
+        userId: user.id!,
       },
     });
     return NextResponse.json("Tareas borradas");

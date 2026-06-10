@@ -58,10 +58,21 @@ export const toogleTodo = async (
 // 2 posibles respuestas:
 // - La tarea creada: Promise<Todo>
 // - Un objeto con el mensaje de error: { message: string }
+
+// Cuando añada una tarea, debe pasar el ID del usuario que ha iniciado sesion
+// No se puede llamar a getUserSessionServer() aquí porque es un server action
+
+// Se puede optar por el REST API
 export const addTodo = async (description: string) => {
   try {
     // Se omite el campo complete porque su valor por defecto es false
-    const todo = await prisma.todo.create({ data: { description } });
+    const todo = await prisma.todo.create({
+      data: {
+        description,
+        // NO SE PUEDE LLAMAR A getUserSessionServer()
+        userId: "",
+      },
+    });
     // No olvidar invalidar la ruta
     revalidatePath("/dashboard/server-todos");
     return todo;

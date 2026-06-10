@@ -44,6 +44,12 @@ model Todo {
   createdAt   DateTime @default(now())
   // @updatedAt actualiza la fecha automáticamente cuando se actualiza el registro
   updatedAt   DateTime @updatedAt
+
+  // RELACIÓN DE UNO A MUCHOS
+  // Un usuario puede tener muchas tareas
+  user   User   @relation(fields: [userId], references: [id])
+  // Campo que referencia al usuario que creó la tarea
+  userId String
 }
 
 // Cada vez que se quiera hacer un cambio en el modelado de tablas, se tiene que hacer una 
@@ -108,6 +114,127 @@ model employee {
   // Pero si ejecutas `npx prisma db push` hace la sincronizacion de la base de datos sin pasar por las migraciones
   // Solamente se utiliza para pruebas en la base de datos, antes de ejecutar un `npx prisma db pull`
 }
+
+// PRISMA ADAPTER Y AUTH.JS
+// https://authjs.dev/getting-started/adapters/prisma
+
+// Sirve para conectar Prisma con Auth.js
+
+// Para usar Prisma Adapter con Auth.js, necesitas instalar el paquete @auth/prisma-adapter
+// npm install @auth/prisma-adapter
+// O el comando: npm install @prisma/client @prisma/extension-accelerate @auth/prisma-adapter
+
+// DEFINICIÓN DE SCHEMA PARA PRISMA ADAPTER
+// Código obtenido de: https://authjs.dev/getting-started/adapters/prisma
+// Estos 5 modelos son los que se necesitan para que funcione Prisma Adapter
+// Ejecuta 'npx prisma migrate dev' para crear las tablas en la base de datos
+// Y luego 'npx prisma generate' para generar el cliente de prisma
+model User {
+  // Modifica el campo para que guarde un uuid en lugar de cuid
+  // Luego puedes ejecutar 'npx prisma db push' para actualizar la base de datos (solamente en desarrollo)
+  id            String          @id @default(uuid())
+  name          String?
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  Authenticator Authenticator[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Puedes agregar campos en el modelo User si lo necesitas
+  // Por ejemplo, agregar un campo roles que sea un array de strings
+  // y un campo isActive que sea un booleano
+  roles    String[] @default(["user"])
+  isActive Boolean  @default(true)
+
+  // Campo opcional de contraseña, solamente si inicia sesion de forma tradicional
+  password String?
+
+  // RELACIONES EN PRISMA
+  // https://www.prisma.io/docs/orm/prisma-schema/data-model/relations
+
+  // Puedes definir relaciones entre modelos para que Prisma genere las consultas necesarias
+  // Por ejemplo, un usuario puede tener muchas tareas
+
+  // El usuario tiene prioridad sobre tarea, relacion de UNO A MUCHOS
+  todos Todo[]
+
+  // Al ejecutar 'npx prisma migrate dev --name user_todo'
+  // Se creará la tabla User con la relación todos
+
+  // Puede salir el error 'We found changes that cannot be executed'
+
+  // Para solucionarlo, puedes borrar la tabla User y volver a ejecutar el comando
+  // 'npx prisma migrate dev --name user_todo'
+  // 'npx prisma generate'
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
+}
+
+// Antes de iniciar sesion o si se tiene la sesion iniciada borra las cookies y luego vuelve
+// a iniciar sesion con github (o con google)
+
+// Cuando inicias sesion, automaticamente agrega ese usuario a la base de datos (pero solamente
+// si no existe, es decir, si ya existe, no lo agrega), pero en el caso de usar ambos Provider
+// (github y google), si un usuario inicio sesion con github por primera vez, entonces tomara
+// los datos de github, pero si luego inicia sesion con google, entonces no modificara los datos
+
+//
 
 // user   User   @relation(fields: [userId], references: [id])
 // userId String

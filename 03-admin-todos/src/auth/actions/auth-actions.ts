@@ -1,46 +1,59 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
+import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 
-export const getUserSessionServer = async() => {
-  const session = await getServerSession(authOptions);
+// Obtiene la sesión del usuario en el servidor
+export const getUserSessionServer = async () => {
+  const session = await auth();
 
+  // Solamente devuelve el usuario
   return session?.user;
-}
+};
 
+// Función para iniciar sesion con email y password tradicional
+export const signInEmailPassword = async (email: string, password: string) => {
+  // Validar que el email y password no esten vacios
+  if (!email || !password) return null;
 
-
-export const signInEmailPassword = async( email: string, password: string ) => {
-
-  if ( !email || !password ) return null;
-
+  // Buscar el usuario en la base de datos
   const user = await prisma.user.findUnique({ where: { email } });
 
-  if ( !user ) {
-    const dbUser = await createUser( email, password );
+  // No intentar esto en un entorno de producción porque la creación del usuario
+  // debe ser en un formulario de registro
+
+  // Si no existe el usurio, crearlo
+  if (!user) {
+    const dbUser = await createUser(email, password);
     return dbUser;
   }
 
-  if ( !bcrypt.compareSync( password, user.password ?? '') ) {
+  // Verificar la contraseña
+  // compareSync sirve para comparar un texto con un hash
+  if (!bcrypt.compareSync(password, user.password ?? "")) {
     return null;
   }
 
   return user;
-}
+};
 
-
-const createUser = async (email: string, password: string ) => {
-  
+// Función para crear al usuario y devolverlo
+const createUser = async (email: string, password: string) => {
   const user = await prisma.user.create({
     data: {
       email: email,
+      // Importante hashear la contraseña
+      // Ejecuta 'npm i bcryptjs'
+      // hashSync sirve para hashear un texto
       password: bcrypt.hashSync(password),
-      name: email.split('@')[0],
-    }
+
+      // El nombre se obtiene del email antes de '@'
+      name: email.split("@")[0],
+
+      // Por defecto, el usuario esta activo
+      isActive: true,
+      roles: ["user"],
+    },
   });
 
   return user;
-
-}
+};

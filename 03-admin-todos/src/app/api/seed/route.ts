@@ -21,22 +21,62 @@ export async function GET(request: Request) {
   // La idea de un seed es que solamente pueda insertar los datos una sola vez
   // Para aquello se borran todos los datos previos con deleteMany
   // delte * from todo
-  await prisma.todo.deleteMany();
+  // await prisma.todo.deleteMany();
 
   // Recuerda que si no aparece el modelo employee en el schema.prisma
   // debes ejecutar `npx prisma generate` para que se actualice
   // await prisma.employee.deleteMany();
 
   // createMany inserta múltiples registros en una sola consulta
-  await prisma.todo.createMany({
-    data: [
-      { description: "Piedra del alma", complete: true },
-      { description: "Piedra del poder", complete: true },
-      { description: "Piedra del tiempo", complete: true },
-      { description: "Piedra del espacio", complete: true },
-      { description: "Piedra de la realidad", complete: true },
-      { description: "Piedra desconocida" },
-    ],
+  // await prisma.todo.createMany({
+  //   data: [
+  //     { description: "Piedra del alma", complete: true },
+  //     { description: "Piedra del poder", complete: true },
+  //     { description: "Piedra del tiempo", complete: true },
+  //     { description: "Piedra del espacio", complete: true },
+  //     { description: "Piedra de la realidad", complete: true },
+  //     { description: "Piedra desconocida" },
+  //   ],
+  // });
+
+  // LIMPIAR DATOS EXISTENTES
+  await prisma.todo.deleteMany();
+  await prisma.user.deleteMany();
+
+  // Crear un usuario de prueba con tareas
+  await prisma.user.create({
+    data: {
+      email: "test1@google.com",
+      password: bcrypt.hashSync("123456"),
+      roles: ["admin", "user", "super-user"],
+      todos: {
+        create: [
+          {
+            description: "Piedra del alma",
+            complete: true,
+          },
+          {
+            description: "Piedra del poder",
+            complete: true,
+          },
+          {
+            description: "Piedra del tiempo",
+            complete: true,
+          },
+          {
+            description: "Piedra del espacio",
+            complete: true,
+          },
+          {
+            description: "Piedra de la realidad",
+            complete: true,
+          },
+          {
+            description: "Piedra desconocida",
+          },
+        ],
+      },
+    },
   });
 
   // Mensaje de éxito

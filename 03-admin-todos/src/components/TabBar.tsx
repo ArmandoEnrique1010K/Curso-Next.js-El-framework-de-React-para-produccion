@@ -53,9 +53,11 @@ export const TabBar = ({
 
   return (
     <div
+      // En tailwind no puedes usar variables dinámicas en las clases
+      // grid-cols-${tabOptions.length}
       className={`
-        grid w-full space-x-2 rounded-xl bg-gray-200 p-2
-        grid-cols-${tabOptions.length}
+        grid w-full rounded-xl bg-gray-200 p-2
+        grid-cols-4
       `}
     >
       {/* Mapear las tabs */}

@@ -3,9 +3,10 @@
 import { SubmitEvent, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
 
-// import * as todosApi from "@/todos/helpers/todos";
+import * as todosApi from "@/todos/helpers/todos";
 import { useRouter } from "next/navigation";
 import { addTodo, deleteCompleted } from "../actions/todo-actions";
+import { createTodo } from "../helpers/todos";
 
 export const NewTodo = () => {
   const router = useRouter();
@@ -43,7 +44,12 @@ export const NewTodo = () => {
 
     if (description.trim().length === 0) return;
 
-    await addTodo(description);
+    // await addTodo(description);
+
+    // Ahora se utilizara el RESTful API, no el server action
+    await todosApi.createTodo(description);
+    router.refresh();
+
     setDescription("");
 
     // Para invalidar el cache de la ruta se hace en el server action
@@ -61,7 +67,7 @@ export const NewTodo = () => {
 
   return (
     // Llama a la función onSubmit cuando se envía el formulario
-    <form onSubmit={onSubmit} className="flex">
+    <form onSubmit={onSubmit} className="flex gap-2">
       <input
         type="text"
         // Establece el estado cuando el usuario escribe en el input
@@ -74,7 +80,7 @@ export const NewTodo = () => {
 
       <button
         type="submit"
-        className="flex items-center justify-center rounded ml-2  bg-sky-500 p-2 text-white hover:bg-sky-700 transition-all"
+        className="flex items-center justify-center rounded px-4 bg-sky-500 p-2 text-white hover:bg-sky-700 transition-all"
       >
         Crear
       </button>
@@ -92,7 +98,7 @@ export const NewTodo = () => {
         // onClickCapture={(e) =>deleteCompleted(e)}
         // onClickCapture={deleteCompleted}
         type="button"
-        className="flex items-center justify-center rounded ml-2 bg-red-400 p-2 text-white hover:bg-red-700 transition-all"
+        className="flex items-center justify-center rounded px-4 bg-red-400 p-2 text-white hover:bg-red-700 transition-all"
       >
         <IoTrashOutline size={24} />
         <span className="ml-2">Borrar completados</span>

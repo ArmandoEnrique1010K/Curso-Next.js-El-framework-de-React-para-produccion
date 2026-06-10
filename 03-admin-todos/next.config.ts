@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
+      // Imagen de github
       {
         protocol: "https",
         hostname: "avatars.githubusercontent.com",

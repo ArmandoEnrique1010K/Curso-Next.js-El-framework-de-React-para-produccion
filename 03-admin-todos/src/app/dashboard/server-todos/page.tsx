@@ -1,8 +1,11 @@
 // export const dynamic = "force-dynamic";
 // export const revalidate = 0;
 
+import { auth } from "@/auth";
+import { getUserSessionServer } from "@/auth/actions/auth-actions";
 import prisma from "@/lib/prisma";
 import { NewTodo, TodosGrid } from "@/todos";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Listado de Todos",
@@ -16,7 +19,24 @@ export const metadata = {
 
 // Server Actions: "La carga pesada se va a realizar en simples funciones"
 export default async function ServerTodosPage() {
+  // Recuerda que auth contiene la información del usuario autenticado
+  // const session = await auth();
+
+  // Simplica el código llamando a la función getUserSessionServer
+  const user = await getUserSessionServer();
+
+  // Si el usuario no existe, redireccionar
+  if (!user) redirect("/api/auth/signin");
+
   const todos = await prisma.todo.findMany({
+    // orderBy: { description: "asc" },
+
+    // Condicion para listar tareas por usuario por ID
+
+    where: {
+      // userId: session?.user?.id,
+      userId: user.id,
+    },
     orderBy: { description: "asc" },
   });
 

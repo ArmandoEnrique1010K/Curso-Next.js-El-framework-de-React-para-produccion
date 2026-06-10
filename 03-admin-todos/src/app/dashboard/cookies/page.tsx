@@ -29,7 +29,9 @@ export default async function CookiesPage() {
         <h1 className="flex mb-4 text-3xl">Tabs</h1>
         {/* Pasa el valor de la cookie como número para que sea seleccionado */}
         <TabBar currentTab={+cookieTab} />
-        <div className="mt-6">{JSON.stringify(allCookies, null, 2)}</div>
+        <div className="mt-6 text-xs whitespace-pre-wrap break-all">
+          {JSON.stringify(allCookies, null, 2)}
+        </div>
       </div>
     </div>
   );

@@ -46,7 +46,7 @@ export const TopMenu = async () => {
           <CiMenuBurger size={30} />
         </button>
         <div className="flex space-x-2">
-          <div className="md:block">
+          {/* <div className="md:block">
             <div className="relative flex items-center text-gray-400 focus-within:text-cyan-400">
               <span className="absolute left-4 h-6 flex items-center pr-3 border-r border-gray-300">
                 <CiSearch />
@@ -59,14 +59,14 @@ export const TopMenu = async () => {
                 className="w-full pl-14 pr-4 py-2.5 rounded-xl text-sm bg-white text-gray-600 outline-none border border-gray-300 focus:border-cyan-300 transition"
               />
             </div>
-          </div>
+          </div> */}
 
-          <button className="flex items-center justify-center w-10 h-10 rounded-xl bg-gray-100 focus:bg-gray-100 active:bg-gray-200">
+          {/* <button className="flex items-center justify-center w-10 h-10 rounded-xl bg-gray-100 focus:bg-gray-100 active:bg-gray-200">
             <CiSearch size={25} />
           </button>
           <button className="flex items-center justify-center w-10 h-10 rounded-xl bg-gray-100 focus:bg-gray-100 active:bg-gray-200">
             <CiChat1 size={25} />
-          </button>
+          </button> */}
 
           {/* Botón para ver el carrito de compras */}
           <Link

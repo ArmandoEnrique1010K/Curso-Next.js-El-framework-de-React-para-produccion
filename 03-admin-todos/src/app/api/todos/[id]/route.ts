@@ -1,3 +1,4 @@
+import { getUserSessionServer } from "@/auth/actions/auth-actions";
 import { Todo } from "@/generated/prisma/client";
 import prisma from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -14,7 +15,19 @@ interface Segments {
 // Función auxiliar asincrona para obtener una tarea por ID
 // Se simplifica para que devuelva la tarea o null
 const getTodo = async (id: string): Promise<Todo | null> => {
+  // Aqui se utiliza el servicio de autenticación para obtener el usuario, si no existe, retorna null
+  const user = await getUserSessionServer();
+  if (!user) {
+    return null;
+  }
+
   const todo = await prisma.todo.findFirst({ where: { id: id } });
+
+  // Si la tarea no existe o no pertenece al usuario, retorna null
+  if (todo?.userId !== user.id) {
+    return null;
+  }
+
   return todo;
 };
 

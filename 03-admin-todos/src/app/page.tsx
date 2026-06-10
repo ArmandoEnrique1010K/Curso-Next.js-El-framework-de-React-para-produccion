@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 
 // Página de inicio (redirige al dashboard)
 export default function Home() {
+  // Lo hace porque al ir a dashboard se ve la pantalla de inicio de sesión
+  // Solamente si no ha iniciado sesion
   redirect("/dashboard");
 
   return (
@@ -28,3 +30,5 @@ export default function Home() {
 // Ahora ejecuta:
 // npm install
 // Esto instalará las dependencias actualizadas
+
+//

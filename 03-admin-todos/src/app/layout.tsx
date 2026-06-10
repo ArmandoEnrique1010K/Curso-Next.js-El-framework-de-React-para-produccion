@@ -27,14 +27,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <AuthProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased ${inter.className}`}
-        >
-          {children}
-        </body>
-      </html>
-    </AuthProvider>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased ${inter.className}`}
+      >
+        {/* // Envuelve todo el contenido de la aplicación con el AuthProvider */}
+        <AuthProvider>{children}</AuthProvider>
+      </body>
+    </html>
   );
 }
