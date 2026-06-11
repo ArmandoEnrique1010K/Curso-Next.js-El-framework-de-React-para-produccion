@@ -1,14 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import QRCode from 'react-qr-code';
-import { OtpInput } from '@/app/auth/components/otp-input';
+import { useState } from "react";
+import QRCode from "react-qr-code";
+import { OtpInput } from "@/app/auth/components/otp-input";
 
 type TwoFactorSetupProps = {
   totpUri: string;
   secretKey: string;
   backupCodes: string[];
-  onComplete: () => void;
+  // Debe pasar el código de verificación del usuario
+  onComplete: (verificationCode: string) => void;
   onCancel: () => void;
 };
 
@@ -20,21 +21,23 @@ export function TwoFactorSetup({
   onCancel,
 }: TwoFactorSetupProps) {
   const [codesAcknowledged, setCodesAcknowledged] = useState(false);
-  const [verificationCode, setVerificationCode] = useState('');
-  const [copyFeedback, setCopyFeedback] = useState<'secret' | 'codes' | null>(null);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [copyFeedback, setCopyFeedback] = useState<"secret" | "codes" | null>(
+    null,
+  );
 
   const isVerificationComplete = verificationCode.length === 6;
   const canComplete = codesAcknowledged && isVerificationComplete;
 
   async function handleCopySecret() {
     await navigator.clipboard.writeText(secretKey);
-    setCopyFeedback('secret');
+    setCopyFeedback("secret");
     setTimeout(() => setCopyFeedback(null), 2000);
   }
 
   async function handleCopyCodes() {
-    await navigator.clipboard.writeText(backupCodes.join('\n'));
-    setCopyFeedback('codes');
+    await navigator.clipboard.writeText(backupCodes.join("\n"));
+    setCopyFeedback("codes");
     setTimeout(() => setCopyFeedback(null), 2000);
   }
 
@@ -58,12 +61,14 @@ export function TwoFactorSetup({
         >
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
             <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
+              {/* Código QR que contiene la URI OTP, escanealo con la App de autenticación como Microsoft Authenticator, Google Authenticator, Authy, etc. */}
               <QRCode
                 value={totpUri}
                 size={176}
                 level="M"
                 className="h-44 w-44"
               />
+              {/* Si lo escaneas te dara un código de 6 dígitos que cambia cada 30 segundos */}
             </div>
 
             <div className="w-full max-w-sm space-y-3">
@@ -75,6 +80,8 @@ export function TwoFactorSetup({
               </p>
               <div className="flex items-center gap-2">
                 <code className="flex-1 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2.5 font-mono text-sm tracking-wider text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50">
+                  {/* Contiene el código secreto que el usuario debe ingresar en su app de autenticación
+                   * como Microsoft Authenticator, Google Authenticator, Authy, etc. */}
                   {secretKey}
                 </code>
                 <button
@@ -82,7 +89,7 @@ export function TwoFactorSetup({
                   onClick={handleCopySecret}
                   className="shrink-0 rounded-lg border border-zinc-300 px-3 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
                 >
-                  {copyFeedback === 'secret' ? 'Copiado' : 'Copiar'}
+                  {copyFeedback === "secret" ? "Copiado" : "Copiar"}
                 </button>
               </div>
             </div>
@@ -120,10 +127,13 @@ export function TwoFactorSetup({
             onClick={handleCopyCodes}
             className="mt-4 h-10 rounded-lg border border-zinc-300 px-4 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
           >
-            {copyFeedback === 'codes' ? 'Códigos copiados' : 'Copiar todos los códigos'}
+            {copyFeedback === "codes"
+              ? "Códigos copiados"
+              : "Copiar todos los códigos"}
           </button>
 
           <label className="mt-5 flex cursor-pointer items-start gap-3">
+            {/* DEBES MARCAR ESTE CAMPO PARA QUE PUEDAS COMPLETAR LA CONFIGURACIÓN */}
             <input
               type="checkbox"
               checked={codesAcknowledged}
@@ -142,6 +152,7 @@ export function TwoFactorSetup({
           description="Introduce el código de 6 caracteres que muestra tu app de autenticación para confirmar que la configuración es correcta."
         >
           <div className="max-w-sm">
+            {/* Campo para introducir los 6 dígitos del código de autenticación */}
             <OtpInput
               id="two-factor-verification-code"
               name="verificationCode"
@@ -166,7 +177,8 @@ export function TwoFactorSetup({
         </button>
         <button
           type="button"
-          onClick={onComplete}
+          // Pasar el código de verificación al componente padre
+          onClick={() => onComplete(verificationCode)}
           disabled={!canComplete}
           className="h-11 rounded-lg bg-zinc-900 px-5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
         >

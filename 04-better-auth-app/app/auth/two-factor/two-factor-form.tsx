@@ -2,13 +2,35 @@
 
 import { useState, type SubmitEvent } from "react";
 import { OtpInput } from "../components/otp-input";
+import { twoFactor } from "better-auth/plugins";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export function TwoFactorForm() {
+  const router = useRouter();
   const [code, setCode] = useState("");
 
-  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     console.log("Two factor code:", code);
+
+    // Verificar el código de dos factores
+    // https://better-auth.com/docs/plugins/2fa#verifying-totp
+    const { data, error } = await authClient.twoFactor.verifyTotp({
+      code: code,
+      trustDevice: true,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    // Redireccionar al dashboard si la verificación fue exitosa
+    router.replace("/dashboard");
+
+    // Solamente ingresas el código de 6 digitos generados en tu app de autenticación
+    // Y listo, ya estás autenticado
   }
 
   const isComplete = code.length === 6;

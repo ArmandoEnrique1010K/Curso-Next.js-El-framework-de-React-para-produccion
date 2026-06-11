@@ -1,34 +1,58 @@
-import { StatCard } from './components/stat-card';
-import { UserEmailInformation } from './components/user-email-information';
+import { headers } from "next/headers";
+import { StatCard } from "./components/stat-card";
+import { UserEmailInformation } from "./components/user-email-information";
+import { auth } from "@/lib/auth";
 
 const recentActivity = [
   {
-    id: '1',
-    action: 'Nuevo registro',
-    detail: 'usuario@ejemplo.com',
-    time: 'Hace 5 min',
+    id: "1",
+    action: "Nuevo registro",
+    detail: "usuario@ejemplo.com",
+    time: "Hace 5 min",
   },
   {
-    id: '2',
-    action: 'Inicio de sesión',
-    detail: 'admin@ejemplo.com',
-    time: 'Hace 12 min',
+    id: "2",
+    action: "Inicio de sesión",
+    detail: "admin@ejemplo.com",
+    time: "Hace 12 min",
   },
   {
-    id: '3',
-    action: 'Sesión cerrada',
-    detail: 'invitado@ejemplo.com',
-    time: 'Hace 1 h',
+    id: "3",
+    action: "Sesión cerrada",
+    detail: "invitado@ejemplo.com",
+    time: "Hace 1 h",
   },
   {
-    id: '4',
-    action: 'Contraseña actualizada',
-    detail: 'demo@ejemplo.com',
-    time: 'Hace 3 h',
+    id: "4",
+    action: "Contraseña actualizada",
+    detail: "demo@ejemplo.com",
+    time: "Hace 3 h",
   },
 ];
 
-export default function DashboardPage() {
+// OBTENER INFORMACIÓN DEL USUARIO EN UN COMPONENTE DEL LADO DEL SERVIDOR
+// https://better-auth.com/docs/basic-usage#server-side
+// Solamente se puede usar un Top Level Await en Next.js, si trabajas en
+// React, debes envolver el componente en un contexto asincrono
+
+// Los headers son necesarios para identificar la sesión del usuario
+// const session = await auth.api.getSession({
+//   headers: await headers(),
+// });
+
+// A pesar de estar en un 'hilo asincrono', solo se ejecuta una vez cuando se
+// carga la página, no se vuelve a ejecutar en cada renderizado
+// El mensaje no aparece en la consola
+// console.log({ session });
+// Por lo cual lo debes definir dentro de la función del componente
+
+export default async function DashboardPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  // Ahora cada vez que se renderice el componente, se obtendrá la sesión del usuario
+
   return (
     <>
       <header className="border-b border-zinc-200 bg-white px-8 py-6 dark:border-zinc-800 dark:bg-zinc-950">
@@ -43,7 +67,7 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          {/* Información del usuario */}
+          {/* Información del usuario, es un client component */}
           <UserEmailInformation />
         </div>
       </header>
@@ -69,7 +93,8 @@ export default function DashboardPage() {
             <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
               <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
                 <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                  Actividad para: TEST_USER
+                  {/* Nombre del usuario o "Usuario" si no hay sesión */}
+                  Actividad para: {session?.user?.name ?? "Usuario"}
                 </h2>
               </div>
               <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">

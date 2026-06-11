@@ -1,11 +1,25 @@
-import { UserEmailInformation } from '../components/user-email-information';
-import { TwoFactorSettings } from './components/two-factor-settings';
+import { auth } from "@/lib/auth";
+import { UserEmailInformation } from "../components/user-email-information";
+import { TwoFactorSettings } from "./components/two-factor-settings";
+import { headers } from "next/headers";
 
 export const metadata = {
-  title: 'Seguridad — Dashboard',
+  title: "Seguridad — Dashboard",
 };
 
-export default function SecurityPage() {
+export default async function SecurityPage() {
+  // DESACTIVAR 2FA
+  // https://better-auth.com/docs/plugins/2fa#disabling-2fa
+
+  // Extraer la sesión del usuario, esto es un server component
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  // Verificar si la 2FA está habilitada
+  const isEnabled2FA = session?.user?.twoFactorEnabled || false;
+  console.log({ isEnabled2FA });
+
   return (
     <>
       <header className="border-b border-zinc-200 bg-white px-8 py-6 dark:border-zinc-800 dark:bg-zinc-950">
@@ -26,7 +40,9 @@ export default function SecurityPage() {
 
       <main className="flex-1 p-8">
         <div className="max-w-3xl">
-          <TwoFactorSettings />
+          {/* Componente de configuración de autenticación de dos factores */}
+          {/* Lleva una prop isEnabled que indica si la 2FA está activada */}
+          <TwoFactorSettings isEnabled={isEnabled2FA} />
         </div>
       </main>
     </>

@@ -59,3 +59,58 @@ export default function Home() {
     </div>
   );
 }
+
+// INTRODUCCIÓN
+
+// Para trabajar con Better Auth, se recomienda tener como minimo la version 16 de next.js, lo puedes
+// comprobar en el archivo package.json
+
+// Actualmente se recomienda trabajar con proxies en lugar de middlewares
+
+// La mayor parte de las aplicaciones web modernas usan two factor authentication para manejar la autenticación
+
+//
+
+// NEONTECH: BASE DE DATOS
+// https://neon.com/
+
+// Una vez creado tu cuenta, se necesita crear una instancia de la base de datos
+// 1. Clic en New Project
+// 2. Escribele un nombre como 'BetterAuth-App', selecciona version 18 de Postgres
+// 3. La región por defecto es suficiente (AWS US East 1(N. Virginia))
+// 4. Clic en Create Project
+
+// Clic en el botón Connect, selecciona la opción de "Connection String", se te mostrará una cadena
+// de conexión, copiala y pegala en el archivo .env
+
+// La URL de conexión tiene el siguiente formato:
+// postgresql://<user>:<password>@<host>:<port (optional)>/<database_name>?sslmode=require&channel_binding=require
+// SSLmode es el modo de autenticación, en este caso es require
+
+// Puedes ir a la sección de 'tables' en Neon para ver las tablas que se tienen en la base de datos
+
+//
+
+// BETTER AUTH: AUTENTICACIÓN
+// https://better-auth.com/docs/introduction
+// Tiene conectores para cualquier framework, en este caso usaremos Next.js
+// Ejecuta el comando 'npm install better-auth' para instalar la dependencia
+
+// Luego se tiene que crear variables de entorno para la configuración de Better Auth
+// en el archivo .env para el manejo de sesiones, se recomienda ejecutar ese comando para
+// generar una clave secreta segura en una terminal:
+// openssl rand -base64 32
+
+// O pulsa el botón "Generate Secret" en la página de Better Auth:
+// https://authkit.com/docs/guides/generate-secret
+
+// Pega la clave generada en la variable BETTER_AUTH_SECRET
+
+// Luego pide la variable de entorno BETTER_AUTH_URL, para redireccionar cuando se haga un
+// login o registro
+
+//
+
+// CREAR LA INSTANCIA DE BETTER AUTH
+// Crea una carpeta llamada 'lib' en la raiz del proyecto y dentro de ella crea un archivo
+// llamado 'auth.ts'
