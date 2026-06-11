@@ -4,13 +4,19 @@ export interface Product {
   images: string[];
   inStock: number;
   price: number;
-  sizes: ValidSizes[];
+
+  // Para renombrar nombre de una constante o propiedad, pulsa F2 para cambiarlas
+  sizes: Size[];
   slug: string;
   tags: string[];
   title: string;
-  type: ValidTypes;
-  gender: "men" | "women" | "kid" | "unisex";
+  type: Types;
+  // Se recomienda que si una propiedad puede tener un conjunto específico de valores,
+  // se defina un tipo para esa propiedad
+  gender: Categories;
 }
 
-export type ValidSizes = "XS" | "S" | "M" | "L" | "XL" | "XXL" | "XXXL";
-export type ValidTypes = "shirts" | "pants" | "hoodies" | "hats";
+// Categorias permitidas
+export type Categories = "men" | "women" | "kid" | "unisex";
+export type Size = "XS" | "S" | "M" | "L" | "XL" | "XXL" | "XXXL";
+export type Types = "shirts" | "pants" | "hoodies" | "hats";
