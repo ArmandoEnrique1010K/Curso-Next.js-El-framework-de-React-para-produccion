@@ -1,0 +1,65 @@
+# Para instalar Postgres utiliza Docker,
+# Alternativamente puedes usar Neon Tech (https://neon.com/) para bases de datos en la nube
+
+# Configuración para Postgres
+services:
+  postgres-db:
+    # Puedes consultar la ultima versión en https://hub.docker.com/_/postgres
+    image: postgres:15.3
+
+    # Cada vez que el contenedor se reinicie, se reiniciará el servicio
+    restart: always
+
+    # Variables de entorno
+    environment:
+
+    # Toma el valor definido en el archivo .env
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    # Espacio fisico donde se guardaran los datos (en el file system del contenedor)
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+
+    ports:
+      - "5432:5432"
+
+# Abre Docker Desktop y ejecuta el comando para iniciar el contenedor
+# docker-compose up -d
+
+# Recordar que si la imagen no existe, se descargará automaticamente y puede tardar unos minutos
+
+# Una vez que se ha iniciado el contenedor en Docker Desktop, debes conectarte a la base de datos
+# usando un cliente de PostgreSQL como DBeaver o pgAdmin
+
+# En DBeaver haz clic en nueva conexión, selecciona 'PostgreSQL' como base de datos y llena 
+# los siguientes campos:
+
+# Host: localhost
+# Port: 5432
+# Database: teslo-shop
+# Username: teslo
+# Password: teslo123
+
+# Una vez que hayas llenado los campos, haz clic en 'Test Connection' para verificar que la conexión es exitosa
+# Si la conexión es exitosa, haz clic en 'Finish' para crear la conexión
+# Ahora puedes ver la base de datos en DBeaver y ejecutar consultas SQL
+
+#
+
+# PRISMA 
+# https://www.prisma.io/docs/prisma-orm/quickstart/prisma-postgres
+# Ejecuta los comandos 'npm install prisma @types/pg --save-dev' y 'npm install @prisma/client @prisma/adapter-pg pg dotenv'
+
+# Luego ejecuta 'npx prisma init --datasource-provider postgresql --output ../generated/prisma' para generar el archivo de configuración de Prisma
+# Tambien podras ver que hay el archivo prisma.config.ts y se agrego una variable de entorno DATABASE_URL
+
+# Modifica la URL de conexion de la base de datos, reemplazando el usuario, contraseña y nombre de la base de datos
+# por los valores que definiste en el archivo .env (aunque sea redundante porque tendras que copiar y pegar los mismos
+# valores definidos)
+
+# Forma de la variable DATABASE_URL
+# DATABASE_URL="postgresql://username:password@localhost:5432/mydb?schema=public"
+
+# Ahora ya puedes crear el schema de la base de datos en prisma/schema.prisma
