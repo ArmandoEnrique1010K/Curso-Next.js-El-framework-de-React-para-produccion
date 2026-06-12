@@ -4,7 +4,14 @@ import "./globals.css";
 import { geistMono, geistSans } from "@/config/fonts";
 
 export const metadata: Metadata = {
-  title: "Teslo | Shop",
+  title: {
+    // Template sirve para añadir un texto que se mostrara en cada uno de
+    // los titulos
+    // %s representa cualquier valor que se le pase al titulo (en este caso
+    // va como prefijo)
+    template: "%s - Teslo | Shop",
+    default: "Home - Teslo | Shop",
+  },
   description: "Una tienda virtual de productos",
 };
 

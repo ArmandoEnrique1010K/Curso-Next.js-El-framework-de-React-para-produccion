@@ -1,3 +1,5 @@
+"use server";
+
 import prisma from "@/lib/prisma";
 import { Gender } from "../../../generated/prisma/client";
 import { cacheLife } from "next/cache";

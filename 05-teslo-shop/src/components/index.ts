@@ -9,6 +9,8 @@ export * from "./product/size-selector/SizeSelector";
 export * from "./product/quantity-selector/QuantitySelector";
 export * from "./product/slideshow/ProductSlideshow";
 export * from "./product/slideshow/ProductSlideshowMobile";
+export * from "./product/stock-label/StockLabel";
+export * from "./product/product-by-slug/ProductBySlug";
 
 export * from "./ui/sidebar/Sidebar";
 export * from "./ui/footer/Footer";
