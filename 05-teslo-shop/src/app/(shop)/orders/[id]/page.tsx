@@ -19,7 +19,9 @@ interface Props {
 }
 
 export default async function ({ params }: Props) {
-  const { id } = await params;
+  // const { id } = await params;
+  // Temporalmente se omite el id para evitar el error de data no cacheada
+  const id = "test-id";
 
   // Verificar
   // redirect('/')

@@ -15,7 +15,10 @@ interface Props {
 }
 
 export default async function ({ params }: Props) {
-  const { slug } = await params;
+  // const { slug } = await params;
+
+  // Temporalmente se omite el slug para evitar el error de data no cacheada
+  const slug = "test-slug";
 
   // Busca el producto por slug (etiqueta de SEO)
   const product = initialData.products.find((product) => product.slug === slug);

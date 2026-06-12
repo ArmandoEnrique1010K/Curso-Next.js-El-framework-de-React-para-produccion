@@ -2,6 +2,8 @@ import { Pagination, ProductGrid, Title } from "@/components";
 import { initialData } from "@/seed/seed";
 import { getPaginatedProductsWithImages } from "@/actions";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { ProductSection } from "@/components/products/product-section/ProductSection";
 
 interface Props {
   searchParams: Promise<{
@@ -18,20 +20,21 @@ export default async function Home({ searchParams }: Props) {
   // Si te vas a: http://localhost:3000/?page=2,
   // Imprime: { page: '2' }
 
-  const { page } = await searchParams;
+  // const { page } = await searchParams;
 
   // Convertir a numero, si no existe, usar 1
-  const pageNumber = page ? parseInt(page) : 1;
+  // const pageNumber = page ? parseInt(page) : 1;
 
   //
 
   // Obtener productos desde la base de datos (no desde el seed inicial)
   // A diferencia del seed, los productos tienen imagenes y otros campos
-  const { products, currentPage, totalPages } =
-    await getPaginatedProductsWithImages({
-      // Pasa la pagina actual
-      page: pageNumber,
-    });
+
+  // Pasa la pagina actual
+  // const { products, currentPage, totalPages } =
+  //   await getPaginatedProductsWithImages({
+  //     page: pageNumber,
+  //   });
 
   // Para que no aparezca un error, debes manejar el tipado de datos en la
   // interface Product (product.interface.ts)
@@ -41,12 +44,11 @@ export default async function Home({ searchParams }: Props) {
   //
 
   // Si no hay productos en la página, redirigir a la página 1
-  if (products.length === 0) {
-    // Retorna un never, el código fuente de abajo en este bloque ya no se ejecutara
-    redirect("/");
-
-    // Ingresa a: http://localhost:3000/?page=28 y redirige a la página 1
-  }
+  // redirect retorna un never, el código fuente de abajo en este bloque ya no se ejecutara
+  // Ingresa a: http://localhost:3000/?page=28 y redirige a la página 1
+  // if (products.length === 0) {
+  //   redirect("/");
+  // }
 
   //
 
@@ -55,11 +57,16 @@ export default async function Home({ searchParams }: Props) {
 
   return (
     <>
-      <Title title="Tienda" subtitle="Todos los productos" className="mb-2" />
-      <ProductGrid products={products} />
+      {/* <Title title="Tienda" subtitle="Todos los productos" className="mb-2" /> */}
 
-      {/* Paginación */}
-      <Pagination totalPages={totalPages} />
+      {/* Grilla y paginación */}
+      {/* <ProductGrid products={products} />
+      <Pagination totalPages={totalPages} /> */}
+
+      {/* Aplica el mismo procedimiento que se aplico en 'src\app\(shop)\gender\[gender]\page.tsx' */}
+      <Suspense fallback={<div>Cargando...</div>}>
+        <ProductSection searchParams={searchParams} />
+      </Suspense>
     </>
   );
 }

@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { Gender } from "../../../generated/prisma/client";
+import { cacheLife } from "next/cache";
 
 // Utiliza un server action para obtener la paginación de productos
 // Este código es del lado del servidor
@@ -21,9 +22,26 @@ export const getPaginatedProductsWithImages = async ({
   take = 12,
   gender,
 }: PaginationOptions) => {
+  // Directiva de cache para que se cachee la función
+  "use cache";
+
   // Validaciones si no es un número o es menor a 1
   if (isNaN(Number(page))) page = 1;
   if (page < 1) page = 1;
+
+  // Establece el tiempo de vida del cache en 60 segundos (1 minuto)
+  cacheLife({
+    revalidate: 60,
+  });
+
+  // Verifica si funciona el cache
+  // Debe imprimir la misma fecha y hora en cada llamada a la función
+  // Por ejemplo, verifica si te vas a:
+  // http://localhost:3000/gender/men y luego haces clic en el botón de la categoria
+  // "Hombres" (que es la misma página), la fecha y hora no debe cambiar
+
+  // Pero debe cambiar despues de 1 minuto (60 segundos)
+  // console.log("Cache: ", new Date().toISOString(), { page, take, gender });
 
   try {
     // 1. Obtener los productos
