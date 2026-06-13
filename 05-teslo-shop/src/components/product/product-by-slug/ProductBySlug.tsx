@@ -6,6 +6,7 @@ import { StockLabel } from "../stock-label/StockLabel";
 import { titleFont } from "@/config/fonts";
 import { SizeSelector } from "../size-selector/SizeSelector";
 import { QuantitySelector } from "../quantity-selector/QuantitySelector";
+import { AddToCart } from "@/app/(shop)/product/[slug]/ui/AddToCart";
 
 interface Props {
   params: Promise<{
@@ -60,22 +61,15 @@ export const ProductBySlug = async ({ params }: Props) => {
         </h1>
         <p className="text-lg mb-5">${product.price}</p>
 
-        {/* Selector de tallas */}
-        {/* En initialData.products, los productos tienen tallas, pero diferentes, la propiedad 
-        'sizes' es un array de strings */}
-        {/* Por ejemplo: ['XS', 'S', 'M', 'L', 'XL'] */}
-        <SizeSelector
+        {/* Los siguientes 3 elementos se definiran en un client component */}
+        {/* <SizeSelector
           selectedSize={product.sizes[0]}
           availableSizes={product.sizes}
         />
-
-        {/* Selector de cantidad */}
-        {/* Se pasa la cantidad como prop, la cantidad maxima debe ser 5 */}
         <QuantitySelector quantity={1} />
 
-        {/* Botón para agregar al carrito */}
-        {/* btn-primary es una clase personalizada que se define en globals.css */}
-        <button className="btn-primary my-5">Agregar al carrito</button>
+        <button className="btn-primary my-5">Agregar al carrito</button> */}
+        <AddToCart product={product} />
 
         {/* Descripción */}
         <h3 className="font-bold text-sm">Descripción</h3>
