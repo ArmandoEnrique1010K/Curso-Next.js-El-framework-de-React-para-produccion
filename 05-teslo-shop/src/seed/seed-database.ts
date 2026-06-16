@@ -34,11 +34,17 @@ async function main() {
 
   // Es por ello que el orden importa al eliminar los datos, primero
   // elimina la tabla que no tiene dependencias con otras como productImage
+  await prisma.user.deleteMany();
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
 
-  const { categories, products } = initialData;
+  const { categories, products, users } = initialData;
+
+  await prisma.user.createMany({
+    data: users,
+  });
+
   // 2. Insertar las categorías
   // Una categoria
   //   await prisma.category.create({

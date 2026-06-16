@@ -64,7 +64,7 @@ export const TopMenu = () => {
         {/* A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. 
         This won't be patched up. */}
         <Link
-          href={totalItemsInCart === 0 ? "/empty" : "/cart"}
+          href={totalItemsInCart === 0 && loaded ? "/empty" : "/cart"}
           className="mx-2"
         >
           <div className="relative">

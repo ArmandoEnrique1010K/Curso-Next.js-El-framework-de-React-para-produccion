@@ -1,3 +1,5 @@
+import bcryptjs from "bcryptjs";
+
 interface SeedProduct {
   description: string;
   images: string[];
@@ -11,10 +13,18 @@ interface SeedProduct {
   gender: "men" | "women" | "kid" | "unisex";
 }
 
+interface SeedUser {
+  email: string;
+  password: string;
+  name: string;
+  role: "admin" | "user";
+}
+
 type ValidSizes = "XS" | "S" | "M" | "L" | "XL" | "XXL";
 type ValidTypes = "shirts" | "pants" | "hoodies" | "hats";
 
 interface SeedData {
+  users: SeedUser[];
   categories: string[];
   products: SeedProduct[];
 }
@@ -25,6 +35,21 @@ interface SeedData {
 // un script que se encarga de cargar la data en el archivo 'seed-database.ts'
 
 export const initialData: SeedData = {
+  users: [
+    {
+      email: "fernando@google.com",
+      name: "Fernando Herrera",
+      password: bcryptjs.hashSync("123456"),
+      role: "admin",
+    },
+    {
+      email: "melissa@google.com",
+      name: "Melissa Flores",
+      password: bcryptjs.hashSync("123456"),
+      role: "user",
+    },
+  ],
+
   // Añade las categorias como un arreglo de string
   categories: ["Shirts", "Pants", "Hoodies", "Hats"],
   products: [
