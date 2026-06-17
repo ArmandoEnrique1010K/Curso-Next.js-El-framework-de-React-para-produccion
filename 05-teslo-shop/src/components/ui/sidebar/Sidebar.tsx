@@ -1,6 +1,5 @@
 "use client";
-
-import { logout } from "@/actions";
+import { signOut } from "next-auth/react";
 import { useUIStore } from "@/store";
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
@@ -24,10 +23,14 @@ export const Sidebar = () => {
   const { data: session, status } = useSession();
   const isAuthenticated = !!session?.user;
   const isAdmin = session?.user?.role === "admin";
+
   // CLSX
   // Ejecuta 'npm i clsx', sirve para aplicar condiciones a clases de CSS
-  console.log("status:", status);
-  console.log("session:", session);
+  // console.log("status:", status);
+  // console.log("session:", session);
+  // console.log("isAuthenticated:", isAuthenticated);
+  // console.log("isAdmin:", isAdmin);
+
   return (
     <div>
       {/* Background black - Fondo negro sobre toda la pantalla */}
@@ -102,7 +105,21 @@ export const Sidebar = () => {
         {isAuthenticated && (
           <button
             className="flex w-full items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
-            onClick={() => logout()}
+            // onClick={async () => {
+            //   await logout();
+            //   closeMenu();
+            //   router.refresh();
+            // }}
+
+            onClick={() => {
+              closeMenu();
+
+              // Esta es la forma correcta de cerrar sesión
+              signOut({
+                redirect: true,
+                callbackUrl: "/",
+              });
+            }}
           >
             <IoLogOutOutline size={30} />
             <span className="ml-3 text-xl">Salir</span>

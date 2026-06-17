@@ -60,3 +60,7 @@ body {
 .btn-secondary {
   @apply bg-gray-200 hover:bg-gray-300 text-black py-2 px-4 rounded transition-all border border-gray-300 cursor-pointer;
 }
+
+.btn-disabled {
+  @apply bg-gray-600 border-gray-800 text-white py-2 px-4 rounded transition-all cursor-not-allowed;
+}

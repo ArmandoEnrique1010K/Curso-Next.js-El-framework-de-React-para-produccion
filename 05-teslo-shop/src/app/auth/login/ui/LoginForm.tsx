@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useActionState, useEffect } from "react";
 import Link from "next/link";
 import { useFormState, useFormStatus } from "react-dom";
 
@@ -9,22 +9,47 @@ import { IoInformationOutline } from "react-icons/io5";
 import clsx from "clsx";
 // import { useRouter } from 'next/navigation';
 
+// Formulario de inicio de sesion del lado del ciente
+// https://nextjs.org/learn/dashboard-app/adding-authentication#updating-the-login-form
 export const LoginForm = () => {
   // const router = useRouter();
-  const [state, dispatch] = useFormState(authenticate, undefined);
 
-  console.log(state);
+  // Anteriormente en NextAuth se utiliza useFormState para tener acceso al estado
+  // del formulario y dispatch para ejecutar la acción relacionada a inicio de sesión
+  // const [state, dispatch] = useFormState(authenticate, undefined);
+
+  // Actualmente se utiliza useActionState que contiene una función de un server action
+  // para autenticar al usuario
+  // isPending es un boolean que indica si la acción está en curso
+  // errorMessage es el mensaje de error retornado por la acción
+  // formAction es la función que se ejecuta al enviar el formulario
+  const [errorMessage, formAction, isPending] = useActionState(
+    authenticate,
+    undefined,
+  );
+
+  // errorMessage devuelve un undefined al recargar la página de login
+  //
+  // console.log(state);
+  console.log(errorMessage);
+
+  // useEffect(() => {
+  //   if (state === "Success") {
+  //     // redireccionar
+  //     // router.replace('/');
+  //     window.location.replace("/");
+  //   }
+  // }, [state]);
 
   useEffect(() => {
-    if (state === "Success") {
-      // redireccionar
-      // router.replace('/');
+    if (errorMessage === "Success") {
       window.location.replace("/");
     }
-  }, [state]);
+  }, [errorMessage]);
 
   return (
-    <form action={dispatch} className="flex flex-col">
+    // <form action={dispatch} className="flex flex-col">
+    <form action={formAction} className="flex flex-col">
       <label htmlFor="email">Correo electrónico</label>
       <input
         className="px-5 py-2 border bg-gray-200 rounded mb-5"
@@ -44,7 +69,19 @@ export const LoginForm = () => {
         aria-live="polite"
         aria-atomic="true"
       >
-        {state === "CredentialsSignin" && (
+        {/* {state === "CredentialsSignin" && (
+          <div className="flex flex-row mb-2">
+            <IoInformationOutline className="h-5 w-5 text-red-500" />
+            <p className="text-sm text-red-500">
+              Credenciales no son correctas
+            </p>
+          </div>
+        )} */}
+
+        {/* Muestra el mensaje de error cuando las credenciales son incorrectas */}
+        {/* Recordar que errorMessage devuelve 'Success' si ha sido exitoso desde 
+        la función authenticate definido en el server action 'login.ts' */}
+        {errorMessage && errorMessage !== "Success" && (
           <div className="flex flex-row mb-2">
             <IoInformationOutline className="h-5 w-5 text-red-500" />
             <p className="text-sm text-red-500">
@@ -54,7 +91,7 @@ export const LoginForm = () => {
         )}
       </div>
 
-      <LoginButton />
+      <LoginButton isPending={isPending} />
       {/* <button type="submit" className="btn-primary">
         Ingresar
       </button> */}
@@ -73,17 +110,29 @@ export const LoginForm = () => {
   );
 };
 
-function LoginButton() {
-  const { pending } = useFormStatus();
+// Componente funcional
+function LoginButton({ isPending }: { isPending: boolean }) {
+  // Obtiene el estado de carga del formulario
+  // const { pending } = useFormStatus();
+
+  // Actualmente se utiliza isPending de useActionState, y se pasa
+  // como prop al componente funcional
+
+  // Imprime true si se ha hecho clic para enviar el formulario (estado
+  // de carga pendiente) y false cuando ya no se está cargando
+  console.log(isPending);
 
   return (
     <button
       type="submit"
+      // clsx aplica un estilo condicional
       className={clsx({
-        "btn-primary": !pending,
-        "btn-disabled": pending,
+        "btn-primary": !isPending,
+        // Utiliza la clase definida en globals.css
+        "btn-disabled": isPending,
       })}
-      disabled={pending}
+      // Se deshabilita el botón cuando está cargando
+      disabled={!!isPending}
     >
       Ingresar
     </button>

@@ -33,17 +33,25 @@ async function main() {
   //   ]);
 
   // Es por ello que el orden importa al eliminar los datos, primero
-  // elimina la tabla que no tiene dependencias con otras como productImage
+  // elimina la tabla que no tiene dependencias con otras como user y productImage
+  // Porque si eliminas primero category, entonces no se podra porque la tabla product
+  // tiene un campo que contiene el ID de la categoria
   await prisma.user.deleteMany();
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
 
+  // Toma la propiedad users
   const { categories, products, users } = initialData;
 
+  // Inserta todos los usuarios definidos en la semilla
   await prisma.user.createMany({
     data: users,
   });
+
+  // Recordar que en entornos de desarrollo, los datos iniciales que se tienen que
+  // insertar se tienen que 'transformar' para que se ajusten al modelo de datos
+  // que se tiene en la base de datos
 
   // 2. Insertar las categorías
   // Una categoria

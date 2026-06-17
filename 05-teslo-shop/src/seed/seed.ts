@@ -13,6 +13,7 @@ interface SeedProduct {
   gender: "men" | "women" | "kid" | "unisex";
 }
 
+// Interface para el tipado de la semilla de usuarios
 interface SeedUser {
   email: string;
   password: string;
@@ -24,9 +25,10 @@ type ValidSizes = "XS" | "S" | "M" | "L" | "XL" | "XXL";
 type ValidTypes = "shirts" | "pants" | "hoodies" | "hats";
 
 interface SeedData {
-  users: SeedUser[];
   categories: string[];
   products: SeedProduct[];
+  // Coloca una propiedad users como un arreglo de SeedUser
+  users: SeedUser[];
 }
 
 // El procedimiento de volcar todos los datos a la base de datos se llama "seed"
@@ -36,15 +38,22 @@ interface SeedData {
 
 export const initialData: SeedData = {
   users: [
+    // Lista de usuarios como objetos
     {
       email: "fernando@google.com",
       name: "Fernando Herrera",
+      // Las contraseñas deben estar hasheadas
+      // Ejecuta 'npm i bcryptjs' para instalar el paquete de bcryptjs
+      // Un parametro opcional es el número de veces que se va a hashear la contraseña
+      //  password: bcryptjs.hashSync("123456", 10),
       password: bcryptjs.hashSync("123456"),
       role: "admin",
     },
     {
       email: "melissa@google.com",
       name: "Melissa Flores",
+      // Si se hashea el valor '123456' por segunda vez, si lo comparas con el valor
+      // original '123456', no coincidirán
       password: bcryptjs.hashSync("123456"),
       role: "user",
     },

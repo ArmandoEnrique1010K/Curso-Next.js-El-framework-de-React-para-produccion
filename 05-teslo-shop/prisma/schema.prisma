@@ -37,6 +37,7 @@ enum Gender {
   unisex
 }
 
+// Roles de usuario
 enum Role {
   admin
   user
@@ -94,12 +95,22 @@ model ProductImage {
   productId String
 }
 
+// Modelo de usuario
 model User {
+  // Identificador único
   id            String    @id @default(uuid())
   name          String
+  // @unique significa que el email debe ser unico
   email         String    @unique
+  // DateTime? significa que el campo puede ser nulo
   emailVerified DateTime?
   password      String
+  // @default(user) significa que el valor por defecto es user
   role          Role      @default(user)
   image         String?
 }
+
+// Recuerda para aplicar los cambios en la base de datos, ejecuta 
+// 'npx prisma migrate dev --name user_role' (se asigno el nombre de la migración
+// 'user role') y luego 'npx prisma generate' para generar el cliente de prisma y
+// las relaciones entre los modelos
