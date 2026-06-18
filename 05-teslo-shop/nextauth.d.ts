@@ -1,5 +1,7 @@
 import NextAuth, { DefaultSession } from "next-auth";
 
+// Este archivo se usa para extender el tipado de la sesión de NextAuth
+// Es necesario para que TypeScript reconozca los campos adicionales
 declare module "next-auth" {
   interface Session {
     user: {
@@ -12,3 +14,6 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 }
+
+// Puedes recargar el IDE para que reconozca los cambios
+// Pulsa F1 y escribe 'Reload window', pulsa Enter

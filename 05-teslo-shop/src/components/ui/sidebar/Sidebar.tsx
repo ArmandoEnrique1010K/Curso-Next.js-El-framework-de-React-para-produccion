@@ -20,9 +20,36 @@ export const Sidebar = () => {
   // Toma el estado del store
   const isSideMenuOpen = useUIStore((state) => state.isSideMenuOpen);
   const closeMenu = useUIStore((state) => state.closeMenu);
-  const { data: session, status } = useSession();
+
+  // El hook useSession sirve para obtener la información de la sesión del usuario
+  // en un componente del lado del cliente
+  const { data: session } = useSession();
+
+  // Ten en cuenta que useSession debe estar envuelto en un SessionProvider, el cual
+  // es el que extrae la información de la sesión del usuario desde el servidor
+
+  // Crea el provider en la ruta: src\components\provider\Provider.tsx
+  // Y luego envuelvelo en el layout principal: src\app\layout.tsx
+
+  // Luego SessionProvider te pedira que no se encuentra la ruta
+  // http://localhost:3000/api/auth/session, busca esa ruta para ver si el usuario
+  // esta autenticado
+
+  // Para aquello crea el archivo route.ts, en la ruta:
+  // src\app\api\auth\[...nextauth]\route.ts
+
+  // Cualquier endpoint de Next Auth (auth.js) caera en ese archivo
+  // Imprime la sesión del usuario (un objeto session con la información
+  // del usuario autenticado en la propiedad user)
+  // console.log({ session });
+
+  // Usa la doble negación para convertir a boolean si hay un usuario autenticado
   const isAuthenticated = !!session?.user;
+
+  // Verifica si el usuario es admin (devuelve un true o false)
   const isAdmin = session?.user?.role === "admin";
+
+  // console.log({ isAdmin });
 
   // CLSX
   // Ejecuta 'npm i clsx', sirve para aplicar condiciones a clases de CSS
@@ -81,8 +108,10 @@ export const Sidebar = () => {
         </div>
 
         {/* Opciones del menú */}
+        {/* Solo muestra esta opción si el usuario esta autenticado */}
         {isAuthenticated && (
           <>
+            {/* Perfil del usuario */}
             <Link
               href="/profile"
               onClick={() => closeMenu()}
@@ -103,8 +132,13 @@ export const Sidebar = () => {
         )}
 
         {isAuthenticated && (
+          // Botón de cerrar sesión
+          // Se recomienda usar un button en lugar de un Link con un evento
+          // onClick que contenga una función del lado del servidor ('use server')
+
           <button
             className="flex w-full items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
+            // No se recomienda llamar a un server action para cerrar sesión
             // onClick={async () => {
             //   await logout();
             //   closeMenu();
@@ -115,10 +149,16 @@ export const Sidebar = () => {
               closeMenu();
 
               // Esta es la forma correcta de cerrar sesión
-              signOut({
-                redirect: true,
-                callbackUrl: "/",
-              });
+              // Puedes redireccionar a una URL luego de cerrar sesión
+              // Pero recuerda que AuthPrincipal redirecciona automáticamente
+              // a la página de login cuando se cierra sesión
+
+              // signOut({
+              //    redirect: true,
+              //    callbackUrl: "/",
+              // });
+
+              signOut();
             }}
           >
             <IoLogOutOutline size={30} />
@@ -126,7 +166,9 @@ export const Sidebar = () => {
           </button>
         )}
 
+        {/* Si no esta autenticado... */}
         {!isAuthenticated && (
+          // Botón para iniciar sesión
           <Link
             href="/auth/login"
             className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
@@ -137,6 +179,7 @@ export const Sidebar = () => {
           </Link>
         )}
 
+        {/* Opciones si el usuario tiene el rol de admin */}
         {isAdmin && (
           <>
             {/* Separador */}

@@ -1,10 +1,11 @@
 import { auth } from "@/auth.config";
 import { redirect } from "next/navigation";
-import React from "react";
 
+// Datos del perfil del usuario
 export const ProfileUser = async () => {
   const session = await auth();
 
+  // Si no hay un usuario autenticado, redirige al login
   if (!session?.user) {
     // redirect('/auth/login?returnTo=/perfil');
     redirect("/");

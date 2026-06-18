@@ -1,12 +1,19 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { cacheLife } from "next/cache";
 
 // Se recomienda que la URL de un producto por slug sea indexable por los bots de Google
 // Ejemplo: http://localhost:3000/product/men_chill_quarter_zip_pullover_-_white
 
 // Busca el producto por slug
 export const getProductBySlug = async (slug: string) => {
+  "use cache";
+
+  // Tiempo de revalidación de los datos del producto
+  cacheLife({
+    revalidate: 604800, // 7 días
+  });
   try {
     // Puedes usar findUnique o findFirst
     const product = await prisma.product.findFirst({

@@ -32,22 +32,80 @@ export const authConfig: NextAuthConfig = {
     newUser: "/auth/new-account",
   },
 
+  // Callbacks, se ejecutan cuando se autentica un usuario
   callbacks: {
+    // authorized sirve para validar si el usuario está autorizado para acceder a una página
     authorized({ auth, request: { nextUrl } }) {
-      console.log({ auth });
-      // const isLoggedIn = !!auth?.user;
+      // console.log({ auth });
+      const isLoggedIn = !!auth?.user;
 
-      // const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
-      // if (isOnDashboard) {
-      //   if (isLoggedIn) return true;
-      //   return false; // Redirect unauthenticated users to login page
-      // } else if (isLoggedIn) {
-      //   return Response.redirect(new URL('/dashboard', nextUrl));
-      // }
+      // Rutas protegidas
+      const protectedRoutes = ["/profile", "/orders", "/checkout", "/admin"];
+
+      // Verifica si se está accediendo a una ruta protegida
+      const isProtectedRoute = protectedRoutes.some((route) =>
+        nextUrl.pathname.startsWith(route),
+      );
+
+      // Si se está accediendo a una ruta protegida y el usuario no está logueado,
+      // redirige al login
+      if (isProtectedRoute && !isLoggedIn) {
+        return Response.redirect(new URL("/auth/login", nextUrl));
+      }
+
+      // Si el usuario está logueado y está intentando acceder a la página de
+      // login, redirige al home
+      if (
+        isLoggedIn &&
+        ["/auth/login", "/auth/new-account"].includes(nextUrl.pathname)
+      ) {
+        return Response.redirect(new URL("/", nextUrl));
+      }
+
       return true;
     },
 
+    // JSON WEB TOKEN, devuelve un JWT
     jwt({ token, user }) {
+      // console.log({ token, user });
+      // Posible valor:
+      //  {
+      //   token: {
+      //     name: 'Fernando Herrera',
+      //     email: 'fernando@google.com',
+      //     picture: null,
+      //     sub: 'd784166d-e76d-44dd-800b-66c401ca7240',
+      //     data: {
+      //       id: 'd784166d-e76d-44dd-800b-66c401ca7240',
+      //       name: 'Fernando Herrera',
+      //       email: 'fernando@google.com',
+      //       emailVerified: null,
+      //       role: 'admin',
+      //       image: null
+      //     },
+      //     iat: 1781748572,
+      //     exp: 1784340572,
+      //     jti: 'd775e09a-f93a-4326-8fc1-7874e974c65a'
+      //   },
+      //   user: undefined
+      // }
+
+      // Cuando inicias sesion, el valor de la propiedad user es un objeto
+      // user: {
+      //   id: 'd784166d-e76d-44dd-800b-66c401ca7240',
+      //   name: 'Fernando Herrera',
+      //   email: 'fernando@google.com',
+      //   emailVerified: null,
+      //   role: 'admin',
+      //   image: null
+      // }
+
+      // Que es el objeto equivalente devuelto por la función authorize en el provider
+      // de Credentials
+
+      // Si recargas la página, veras que user se vuelve undefined
+
+      // Ese objeto se tiene que pasar al token para que tenga la información del usuario
       if (user) {
         token.data = user;
       }
@@ -55,9 +113,53 @@ export const authConfig: NextAuthConfig = {
       return token;
     },
 
+    // El usuario (user) es undefined, porque el token ya tiene la información del usuario
     session({ session, token, user }) {
+      // console.log({ session, token, user });
+
+      // Solamente si el valor de token.data existe como resultado del callback de jwt
+      // se asigna a session.token.data
+      //
+      // Posible valor:
+      // {
+      //   session: {
+      //     user: {
+      //       name: 'Fernando Herrera',
+      //       email: 'fernando@google.com',
+      //       image: null
+      //     },
+      //     expires: '2026-07-18T02:08:17.919Z'
+      //   },
+      //   token: {
+      //     name: 'Fernando Herrera',
+      //     email: 'fernando@google.com',
+      //     picture: null,
+      //     sub: 'd784166d-e76d-44dd-800b-66c401ca7240',
+      //     data: {
+      //       id: 'd784166d-e76d-44dd-800b-66c401ca7240',
+      //       name: 'Fernando Herrera',
+      //       email: 'fernando@google.com',
+      //       emailVerified: null,
+      //       role: 'admin',
+      //       image: null
+      //     },
+      //     iat: 1781748497,
+      //     exp: 1784340497,
+      //     jti: 'c3377be9-6de2-4e33-ab3b-d55e625b7572'
+      //   },
+      //   user: undefined
+      // }
+
+      // Se coloca un tipado any
       session.user = token.data as any;
       return session;
+
+      // Con ello ya se tiene la información del usuario en
+      // src\components\profile\ProfileUser.tsx, al llamar a session.user (desde
+      // la función auth())
+
+      // Para solucionar el problema del tipado, crea el archivo 'nextauth.d.ts' en la
+      // raíz del proyecto
     },
   },
 
@@ -139,8 +241,8 @@ export const authConfig: NextAuthConfig = {
 
         // Cuando inicias sesion, se almacenan unas cookies relacionadas
         // con la sesión del usuario:
-        // una contiene la url de redireccion de la aplicación
-        // otra contiene el token de autenticación
+        // authjs.callback-url: contiene la url de redireccion de la aplicación si ha logrado iniciar sesion
+        // authjs.csrf-token: contiene el token de autenticación
       },
     }),
   ],
@@ -149,3 +251,8 @@ export const authConfig: NextAuthConfig = {
 // Exportar las funciones de autenticación de NextAuth
 // Pasale las configuraciones de authConfig
 export const { signIn, signOut, auth, handlers } = NextAuth(authConfig);
+
+// Si realizas un cambio en la base de datos en la tabla users y vuelves a actualizar la
+// página del perfil del usuario, veras que no se actualiza porque los cambios del usuario
+// estan en el JWT
+// Para actualizar el JWT, necesitas actualizar el JWT manualmente

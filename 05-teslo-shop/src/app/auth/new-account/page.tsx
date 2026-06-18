@@ -1,6 +1,7 @@
 import { titleFont } from "@/config/fonts";
 import { RegisterForm } from "./ui/RegisterForm";
 
+// Página de nueva cuenta
 export default function NewAccountPage() {
   return (
     <div className="flex flex-col min-h-screen pt-32 sm:pt-52">

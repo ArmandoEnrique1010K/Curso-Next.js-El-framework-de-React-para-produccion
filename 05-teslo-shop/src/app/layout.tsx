@@ -28,7 +28,8 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable}  antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {" "}
+        {/* Envuelve aqui el Provider para que los componentes hijos puedan acceder
+        a la información de la sesión, con ello ya se tiene el contexto de SessionProvider */}
         <Provider>{children} </Provider>
       </body>
     </html>

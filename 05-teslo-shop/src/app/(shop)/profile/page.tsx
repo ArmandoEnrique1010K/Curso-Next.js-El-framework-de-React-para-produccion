@@ -6,6 +6,9 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 export default async function ProfilePage() {
+  // Recuerda que no puedes usar auth() en un server component si cacheComponents esta
+  // habilitado
+
   //   const session = await auth();
 
   //   if (!session?.user) {
@@ -16,6 +19,8 @@ export default async function ProfilePage() {
   return (
     <div>
       <Title title="Perfil" />
+
+      {/* Muestra los datos del perfil del usuario */}
       <Suspense fallback={<div>Cargando...</div>}>
         <ProfileUser />
       </Suspense>

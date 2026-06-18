@@ -35,14 +35,21 @@ export async function authenticate(
     // Forma tradicional de inicio de sesion
     await signIn("credentials", {
       ...Object.fromEntries(formData),
+      // Evita que la redirección automática ocurra
       redirect: false,
     });
 
     // Si no hay error, retorna "Success"
     return "Success";
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
+    // Imprime el mensaje de error en la consola del servidor
+    // console.log({ error: error?.toString() });
+
+    // return "CredentialsSignin";
+
+    // Devuelve un mensaje de error específico según el tipo de error
     if (error instanceof AuthError) {
       // error.type contiene el tipo de error
       switch (error.type) {
@@ -53,15 +60,16 @@ export async function authenticate(
       }
     }
     throw error;
-
-    // return "CredentialsSignin";
   }
 }
 
+// Server action para iniciar sesion desde el formulario de registrar usuario
 export const login = async (email: string, password: string) => {
   try {
+    // Inicia sesión con las credenciales
     await signIn("credentials", { email, password });
 
+    // Respuesta exitosa
     return { ok: true };
   } catch (error) {
     console.log(error);

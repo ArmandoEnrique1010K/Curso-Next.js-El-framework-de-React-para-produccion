@@ -29,7 +29,6 @@ export const LoginForm = () => {
   );
 
   // errorMessage devuelve un undefined al recargar la página de login
-  //
   // console.log(state);
   console.log(errorMessage);
 
@@ -41,9 +40,24 @@ export const LoginForm = () => {
   //   }
   // }, [state]);
 
+  // Para redireccionar luego de introducir credenciales correctas
+  // utiliza un useEffect (este debe ser un client component) cuya dependencia
+  // sea errorMessage
   useEffect(() => {
     if (errorMessage === "Success") {
+      // Redireccionar a la página principal
+      // router.replace('/');
+
+      // En lugar de router.replace se utiliza window.location.replace
+      // para que haga una recarga del navegador y actualice el estado
+
+      // La diferencia es que router.replace no recarga el navegador,
+      // solo cambia la ruta
       window.location.replace("/");
+
+      // Recuerda que desde el componente PrincipalUser, si hay una sesión activa
+      // redirige a la página de inicio ("/"), por lo cual ya no puedes ir a
+      // la página de login ('auth/login').
     }
   }, [errorMessage]);
 
