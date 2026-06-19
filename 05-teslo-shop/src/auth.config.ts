@@ -39,8 +39,18 @@ export const authConfig: NextAuthConfig = {
       // console.log({ auth });
       const isLoggedIn = !!auth?.user;
 
+      // Proxy para limitar el acceso a ciertas rutas
+      // https://nextjs.org/learn/dashboard-app/adding-authentication#protecting-your-routes-with-nextjs-proxy
+
       // Rutas protegidas
-      const protectedRoutes = ["/profile", "/orders", "/checkout", "/admin"];
+      const protectedRoutes = [
+        "/profile",
+        "/cart",
+        // TODO: ARREGLAR LAS RUTAS
+        // "/checkout",
+        "/admin",
+        "/checkout/address",
+      ];
 
       // Verifica si se está accediendo a una ruta protegida
       const isProtectedRoute = protectedRoutes.some((route) =>

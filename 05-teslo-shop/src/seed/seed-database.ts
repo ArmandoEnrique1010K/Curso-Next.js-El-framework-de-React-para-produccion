@@ -2,6 +2,7 @@
 
 import prisma from "../lib/prisma";
 import { initialData } from "./seed";
+import { countries } from "./seed-countries";
 
 // import { initialData } from "./seed";
 
@@ -36,7 +37,12 @@ async function main() {
   // elimina la tabla que no tiene dependencias con otras como user y productImage
   // Porque si eliminas primero category, entonces no se podra porque la tabla product
   // tiene un campo que contiene el ID de la categoria
+
+  // Borrar todas las direcciones de usuarios
+  await prisma.userAddress.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.country.deleteMany();
+
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
@@ -47,6 +53,12 @@ async function main() {
   // Inserta todos los usuarios definidos en la semilla
   await prisma.user.createMany({
     data: users,
+  });
+
+  // Insertar paises
+  await prisma.country.createMany({
+    // countries se obtiene desde seed-countries
+    data: countries,
   });
 
   // Recordar que en entornos de desarrollo, los datos iniciales que se tienen que
