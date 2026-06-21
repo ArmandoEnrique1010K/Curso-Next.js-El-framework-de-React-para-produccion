@@ -3,7 +3,6 @@
 import { auth } from "@/auth.config";
 import { Address, Size } from "@/interfaces";
 import prisma from "@/lib/prisma";
-import { OrderAddress } from "../../../generated/prisma/browser";
 
 interface ProductToOrder {
   productId: string;
@@ -189,6 +188,7 @@ export const placeOrder = async (
           "No se puede crear una orden con un producto de precio 0",
         );
       }
+      // console.log("address:", address);
 
       // 3. Crear la dirección de la orden
       const { country, ...restAddress } = address;
@@ -222,6 +222,7 @@ export const placeOrder = async (
   } catch (error: any) {
     // Recordar que si cae en un throw, message toma el mensaje que se le pasa al
     // objeto Error
+    console.log(error);
 
     // Ejemplo: stock insuficiente -> "Men's Cybertruck Owl Tee no tiene inventario suficiente"
     return {

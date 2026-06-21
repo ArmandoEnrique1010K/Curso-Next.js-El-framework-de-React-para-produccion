@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { geistMono, geistSans } from "@/config/fonts";
-import { Provider } from "@/components";
+import { Providers } from "@/components";
 
 export const metadata: Metadata = {
   title: {
@@ -30,7 +30,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {/* Envuelve aqui el Provider para que los componentes hijos puedan acceder
         a la información de la sesión, con ello ya se tiene el contexto de SessionProvider */}
-        <Provider>{children} </Provider>
+        <Providers>{children} </Providers>
       </body>
     </html>
   );

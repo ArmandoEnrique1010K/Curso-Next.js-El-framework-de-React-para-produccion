@@ -1,4 +1,5 @@
 // Pagina del checkout, cierre de compra una vez cuando haya introducido su direccion
+
 import { CheckoutSection } from "@/components/checkout/checkout-section/CheckoutSection";
 
 // Productos de prueba

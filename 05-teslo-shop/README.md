@@ -12,5 +12,6 @@ Proyecto E-Commerce construido con Next.js, Tailwind CSS y TypeScript.
 6. Generar el cliente de Prisma `npx prisma generate`.
 7. Ejecutar el seed `npm run seed`.
 8. Correr el proyecto `npm run dev`.
+9. Limpiar el localStorage del navegador
 
 ## Correr en producción

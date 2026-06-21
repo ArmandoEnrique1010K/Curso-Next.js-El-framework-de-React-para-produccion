@@ -1,20 +1,30 @@
 "use client";
 
-import { ProductsInCart } from "@/app/(shop)/cart/ui/ProductsInCart";
-import { PlaceOrder } from "@/app/(shop)/checkout/(checkout)/ui/PlaceOrder";
 import { Title } from "@/components/ui/title/Title";
 import { useCartStore } from "@/store";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { ProductsInCart } from "../ui/ProductsInCart";
+import { PlaceOrder } from "../ui/PlaceOrder";
+import { useEffect } from "react";
 
 export const CheckoutSection = () => {
   // Obviamente si no hay ningun producto en el carrito, se puede redirigir
   // a una página de error
   const cart = useCartStore((state) => state.cart);
 
-  if (cart.length === 0) {
-    redirect("/cart");
-  }
+  // En componentes del lado del cliente debes usar useRouter en lugar de redirect
+  const router = useRouter();
+
+  // if (cart.length === 0) {
+  //   redirect("/cart");
+  // }
+
+  useEffect(() => {
+    if (cart.length === 0) {
+      router.replace("/cart");
+    }
+  }, []);
 
   return (
     <div className="flex justify-center items-center mb-72 px-10 sm:px-0">

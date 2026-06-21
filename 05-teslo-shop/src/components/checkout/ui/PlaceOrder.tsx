@@ -60,6 +60,7 @@ export const PlaceOrder = () => {
     // El ID del usuario que ha iniciado sesion no se envia porque se obtiene desde
     // el server action
     // console.log({ address, productToOrder });
+
     const resp = await placeOrder(productToOrder, address);
 
     // Imprime en la consola del servidor la respuesta del server action
@@ -79,7 +80,7 @@ export const PlaceOrder = () => {
     // Si se ha creado la orden...
     // Limpiar el carrito y redirigir al usuario a la página de ordenes
     clearCart();
-    router.replace("/orders/" + resp.order?.id);
+    router.push("/orders/" + resp.order?.id);
   };
 
   if (!loaded) {
@@ -134,7 +135,7 @@ export const PlaceOrder = () => {
         </span>
       </div>
 
-      <div className="mt-5 mb-2 w-full">
+      <div className=" w-full">
         <p className="mb-5">
           {/* Disclaimer */}
           <span className="text-xs">

@@ -6,11 +6,17 @@ import { Title } from "@/components";
 import Link from "next/link";
 import { ProductsInCart } from "@/app/(shop)/cart/ui/ProductsInCart";
 import { OrderSummary } from "@/app/(shop)/cart/ui/OrderSummary";
+import { useEffect, useState } from "react";
 
 export const CartSection = () => {
   const cart = useCartStore((state) => state.cart);
+  const [loaded, setLoaded] = useState(false);
 
-  if (cart.length === 0) {
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
+  if (loaded === true && cart.length === 0) {
     redirect("/empty");
   }
 

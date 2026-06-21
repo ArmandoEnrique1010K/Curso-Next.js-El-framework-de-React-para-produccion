@@ -1,4 +1,5 @@
 import { getOrdersByUser } from "@/actions";
+import clsx from "clsx";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -59,18 +60,21 @@ export const ListOrders = async () => {
               <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                 {order.orderAddress?.firstName} {order.orderAddress?.lastName}
               </td>
-              <td className="flex items-center text-sm  text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                {order.isPaid ? (
-                  <>
-                    <IoCardOutline className="text-green-800" />
-                    <span className="mx-2 text-green-800">Pagada</span>
-                  </>
-                ) : (
-                  <>
-                    <IoCardOutline className="text-red-800" />
-                    <span className="mx-2 text-red-800">No pagada</span>
-                  </>
+              <td
+                className={clsx(
+                  "flex items-center text-sm  text-gray-900 font-light px-6 py-4 whitespace-nowrap",
+                  {
+                    "text-green-800": order.isPaid,
+                    "text-red-800": !order.isPaid,
+                  },
                 )}
+              >
+                <>
+                  <IoCardOutline size={30} />
+                  <span className="mx-2">
+                    {order?.isPaid ? "Pagada" : "No pagada"}
+                  </span>
+                </>
               </td>
               <td className="text-sm text-gray-900 font-light px-6 ">
                 <Link href={`/orders/${order.id}`} className="hover:underline">

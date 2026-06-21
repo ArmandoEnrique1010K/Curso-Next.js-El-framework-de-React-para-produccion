@@ -64,3 +64,12 @@ body {
 .btn-disabled {
   @apply bg-gray-600 border-gray-800 text-white py-2 px-4 rounded transition-all cursor-not-allowed;
 }
+
+/* Aplicar estilos personalizados a los botones de paypal */
+paypal-button {
+  width: 100%;
+}
+
+paypal-basic-card-container {
+  width: 100%;
+}

@@ -193,6 +193,11 @@ model Order {
 
   // Relación uno a uno con la dirección de la orden (es opcional)
   orderAddress OrderAddress?
+
+  // ID DE TRANSACCIÓN
+  // Teoricamente es el ID del proveedor de terceros de la transacción de pago
+  // Por ejemplo, si usas Stripe, este sería el ID de la transacción de Stripe
+  transactionId String?
 }
 
 // Item de una orden
@@ -244,3 +249,41 @@ model OrderAddress {
 // Resumen para aplicar los cambios en la base de datos
 // npx prisma migrate dev --name <Nombre_Migración>
 // npx prisma generate
+
+//
+
+// PAYPAL 
+// https://developer.paypal.com/home/
+
+// Inicia sesion en Paypal, ve al dashboard de Paypal, activa en modo 'Sandbox' (modo de desarrollo), lo puedes
+// encontrar en el panel izquierdo de Paypal, ve a la sección de API Credentials
+
+// Puedes crear una nueva aplicación, haz en clic en 'Create App', escribele un nombre como 'TesloShop', selecciona
+// el tipo 'Merchant' y puedes dejar el correo que ya viene por defecto, ese correo es para probar el sanbox, le das
+// clic en createApp
+
+// Al abrir la aplicación, verás las credenciales de la aplicación: Client ID y Secret Key 1, el primero es el
+// identificador para la aplicación (puede ser pública) y el segundo es la clave secreta para la aplicación (debe
+// estar oculta en el archivo .env)
+
+// Copia ambas credenciales y pégala en el archivo .env
+
+// En el panel izquierdo de Paypal, ve a la sección de 'Testing Tools', 'Sandbox Accounts', 
+// allí podrás crear una cuenta de prueba para probar el proceso de transacción
+
+// Por defecto se tienen 2 cuentas de prueba, una de ellas es 'Personal' y la otra es 'Business'
+
+// Clic en 'Create account', selecciona el tipo de cuenta 'Personal', selecciona el pais 'Peru' y le das clic en 
+// 'Create account'
+
+// Puedes cambiarle la contraseña de la cuenta creada
+
+// ADVERTENCIA: No cambies al modo 'Live' en Paypal porque ahi comienza a cobrar dinero real 
+
+// BOTONES DE PAYPAL
+// https://www.npmjs.com/package/@paypal/react-paypal-js
+
+// Se instala una dependencia, para aquello ejecuta: 'npm i @paypal/react-paypal-js'
+
+// Luego pide colocar un Provider generado en el lado del cliente, en este caso, en
+// src\components\providers\Providers.tsx

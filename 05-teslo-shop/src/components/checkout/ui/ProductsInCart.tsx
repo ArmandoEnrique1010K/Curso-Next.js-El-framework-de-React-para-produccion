@@ -1,9 +1,9 @@
 "use client";
 
 import { useCartStore } from "@/store";
+import { currencyFormat } from "@/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { currencyFormat } from "../../../../../utils/currencyFormat";
 
 export const ProductsInCart = () => {
   const productsInCart = useCartStore((state) => state.cart);
