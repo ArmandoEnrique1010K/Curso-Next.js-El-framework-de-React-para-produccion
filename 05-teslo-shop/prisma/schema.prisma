@@ -21,6 +21,7 @@ datasource db {
 // Recuerda tener instalada la extension de Prisma en el IDE
 
 // ENUMS - Tienen valores predefinidos
+// Debes colocar todas las tallas
 enum Size {
   XS
   S
@@ -28,6 +29,7 @@ enum Size {
   L
   XL
   XXL
+  XXXL
 }
 
 enum Gender {
@@ -78,6 +80,9 @@ model Product {
   // modelo de ProductImage
   productImages ProductImage[]
 
+  // Relación con los items de la orden
+  orderItems OrderItem[]
+
   // Crea un indice para la columna gender
   @@index([gender])
 }
@@ -112,6 +117,10 @@ model User {
   // Relación de uno a uno 
   // un usuario opcionalmente tiene una direccion
   address UserAddress?
+
+  // Relación de uno a muchos
+  // un usuario puede tener muchas ordenes
+  orders Order[]
 }
 
 // Recuerda para aplicar los cambios en la base de datos, ejecuta 
@@ -126,6 +135,9 @@ model Country {
 
   // Relacion hacia UserAddress
   userAddresses UserAddress[]
+
+  // Relacion hacia OrderAddress
+  orderAddress OrderAddress[]
 }
 
 // Direccion del usuario
@@ -148,3 +160,87 @@ model UserAddress {
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
 }
+
+// Orden de compras
+model Order {
+  id String @id @default(uuid())
+
+  // Subtotal, impuesto y total a pagar
+  // Float es el tipo de dato número decimal
+  subTotal Float
+  tax      Float
+  total    Float
+
+  // Numero de items en la orden
+  itesmInOrder Int
+
+  // ¿Ha pagado?
+  isPaid Boolean @default(false)
+
+  // Fecha de pago
+  paidAt DateTime?
+
+  // Fechas de creación y actualización
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relación con el usuario
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // Relación con los items de la orden
+  orderItems OrderItem[]
+
+  // Relación uno a uno con la dirección de la orden (es opcional)
+  orderAddress OrderAddress?
+}
+
+// Item de una orden
+model OrderItem {
+  id       String @id @default(uuid())
+  quantity Int
+
+  // Se guarda el precio en el momento de la compra
+  // Porque los precios son dinamicos, el precio se guarda
+  price Float
+
+  // Talla, toma un valor de enum Size
+  size Size
+
+  // Relación con la orden
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String
+
+  // Recordar que al guardar este archivo, se crea la relación con la tabla Order
+  // y se agrega la columna orderItems a la tabla Order
+
+  // Relación con el producto
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+}
+
+// Dirección de entrega de la orden
+// No es la misma que la direccion del usuario (UserAddress)
+model OrderAddress {
+  id         String  @id @default(uuid())
+  firstName  String
+  lastName   String
+  address    String
+  address2   String?
+  city       String
+  postalCode String
+  phone      String
+
+  // Relación con pais
+  country   Country @relation(fields: [countryId], references: [id])
+  countryId String
+
+  // Relación con la orden
+  order   Order  @relation(fields: [orderId], references: [id])
+  // La orden solo puede tener una dirección, para aquello se utiliza @unique
+  orderId String @unique
+}
+
+// Resumen para aplicar los cambios en la base de datos
+// npx prisma migrate dev --name <Nombre_Migración>
+// npx prisma generate

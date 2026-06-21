@@ -14,7 +14,7 @@ export const OrderSummary = () => {
   );
 
   // Hazlo luego de obtener la función del store
-  const { itemInCart, subTotal, tax, total } = summaryInformation();
+  const { itemsInCart, subTotal, tax, total } = summaryInformation();
 
   // Evita el problema de rehidratación
   useEffect(() => {
@@ -29,7 +29,7 @@ export const OrderSummary = () => {
     <div className="grid grid-cols-2">
       <span>No. Productos</span>
       <span className="text-right">
-        {itemInCart === 1 ? "1 artículo" : `${itemInCart} artículos`}
+        {itemsInCart === 1 ? "1 artículo" : `${itemsInCart} artículos`}
       </span>
 
       <span>Subtotal</span>

@@ -38,6 +38,12 @@ async function main() {
   // Porque si eliminas primero category, entonces no se podra porque la tabla product
   // tiene un campo que contiene el ID de la categoria
 
+  // Recuerda que cada vez que modificas schema.prisma debes modificar el seed
+  // para borrar datos
+  await prisma.orderAddress.deleteMany();
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
+
   // Borrar todas las direcciones de usuarios
   await prisma.userAddress.deleteMany();
   await prisma.user.deleteMany();

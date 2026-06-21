@@ -80,11 +80,14 @@ export const AddressForm = ({ countries, userStoreAddress = {} }: Props) => {
 
     // Grabar los datos en el estado global
     // El tipado de ambos: data y address es el mismo, a excepción de rememberAddress
-    setAddress(data);
+    // setAddress(data);
 
     // Usa el operador rest para tomar todas las propiedades excepto rememberAddress
     // Porque el tipado de address no incluye rememberAddress
     const { rememberAddress, ...restAddress } = data;
+
+    // Se omite el campo rememberAddress porque no está en el tipado de address
+    setAddress(restAddress);
 
     // Si el valor en el campo rememberAddress es true
     if (data.rememberAddress) {

@@ -1,16 +1,21 @@
-// Pagina del checkout, cierre de compra una vez cuando haya introducido su direccion
-import { QuantitySelector, Title } from "@/components";
-import { initialData } from "@/seed/seed";
-import Image from "next/image";
+"use client";
+
+import { ProductsInCart } from "@/app/(shop)/cart/ui/ProductsInCart";
+import { PlaceOrder } from "@/app/(shop)/checkout/(checkout)/ui/PlaceOrder";
+import { Title } from "@/components/ui/title/Title";
+import { useCartStore } from "@/store";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-const productInCart = [
-  initialData.products[0],
-  initialData.products[1],
-  initialData.products[2],
-];
+export const CheckoutSection = () => {
+  // Obviamente si no hay ningun producto en el carrito, se puede redirigir
+  // a una página de error
+  const cart = useCartStore((state) => state.cart);
 
-export default function () {
+  if (cart.length === 0) {
+    redirect("/cart");
+  }
+
   return (
     <div className="flex justify-center items-center mb-72 px-10 sm:px-0">
       {/* w-[1000px] sirve para añadir un ancho personalizado */}
@@ -25,8 +30,7 @@ export default function () {
               Editar carrito
             </Link>
 
-            {/*Items del carrito */}
-            {productInCart.map((product) => (
+            {/* {productInCart.map((product) => (
               <div key={product.slug} className="flex mb-5">
                 <Image
                   src={`/products/${product.images[0]}`}
@@ -49,13 +53,15 @@ export default function () {
                   <button className="underline mt-3">Remover</button>
                 </div>
               </div>
-            ))}
+            ))} */}
+
+            {/* Items del carrito, los items se obtienen desde el store */}
+            <ProductsInCart />
           </div>
 
           {/* Checkout - Resumen de orden */}
-          <div className="bg-white rounded-xl shadow-xl p-7">
+          {/* <div className="bg-white rounded-xl shadow-xl p-7">
             <h2 className="text-2xl mb-2 font-bold">Dirección de entrega</h2>
-            {/* Datos de la dirección */}
             <div className="mb-10">
               <p className="text-xl">Armando Enrique</p>
               <p>Av. Siempreviva 123</p>
@@ -66,7 +72,6 @@ export default function () {
               <p>555-555-5555</p>
             </div>
 
-            {/* Divisor */}
             <div className="w-full h-0.5 bg-gray-200 mb-10" />
 
             <h2 className="text-2xl mb-2">Resumen de orden</h2>
@@ -87,7 +92,6 @@ export default function () {
 
             <div className="mt-5 mb-2 w-full">
               <p className="mb-5">
-                {/* Disclaimer */}
                 <span className="text-xs">
                   Al hacer clic en &quot;Colocar orden&quot;, aceptas nuestros{" "}
                   <a href="#" className="underline">
@@ -108,9 +112,11 @@ export default function () {
                 Colocar orden
               </Link>
             </div>
-          </div>
+          </div> */}
+
+          <PlaceOrder />
         </div>
       </div>
     </div>
   );
-}
+};

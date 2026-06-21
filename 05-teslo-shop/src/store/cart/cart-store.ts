@@ -18,13 +18,16 @@ interface State {
     subTotal: number;
     tax: number;
     total: number;
-    itemInCart: number;
+    itemsInCart: number;
   };
 
   // Métodos para gestionar el carrito
   addProductToCart: (product: CartProduct) => void;
   updateProductQuantity: (product: CartProduct, quantity: number) => void;
   removeProduct: (product: CartProduct) => void;
+
+  // Limpiar el carrito
+  clearCart: () => void;
 }
 
 export const useCartStore = create<State>()(
@@ -54,7 +57,7 @@ export const useCartStore = create<State>()(
         );
         const tax = subTotal * 0.18;
         const total = subTotal + tax;
-        const itemInCart = cart.reduce(
+        const itemsInCart = cart.reduce(
           (total, item) => total + item.quantity,
           0,
         );
@@ -64,7 +67,7 @@ export const useCartStore = create<State>()(
           subTotal,
           tax,
           total,
-          itemInCart,
+          itemsInCart,
         };
       },
 
@@ -130,6 +133,13 @@ export const useCartStore = create<State>()(
           cart: updatedCartProducts,
         });
       },
+
+      // Limpiar el carrito
+      clearCart() {
+        set({
+          cart: [],
+        });
+      },
     }),
 
     // Definición del key para el localStorage
@@ -163,3 +173,7 @@ export const useCartStore = create<State>()(
     },
   ),
 );
+
+// Para borrar los datos almacenados en el localstorage, pulsa F12 en el navegador, ve a la pestaña
+// 'Application', selecciona 'Local Storage', busca el key 'shoping-cart', clic derecho y selecciona
+// 'delete', borra el carrito de compras
