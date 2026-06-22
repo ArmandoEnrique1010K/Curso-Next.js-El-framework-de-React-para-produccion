@@ -6,6 +6,7 @@ import { initialData } from "@/seed/seed";
 import { redirect } from "next/navigation";
 import { currencyFormat } from "@/utils";
 import { getOrderById } from "@/actions";
+import { OrderStatus } from "@/components";
 
 interface Props {
   params: Promise<{
@@ -42,20 +43,10 @@ export const OrderSection = async ({ params }: Props) => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
           <div className="flex flex-col mt-5">
-            <div
-              className={clsx(
-                "flex items-center rounder-lg py-2 px-3.5 text-xs font-bold text-white mb-5",
-                {
-                  "bg-red-500": !order?.isPaid,
-                  "bg-green-500": order?.isPaid,
-                },
-              )}
-            >
-              <IoCardOutline size={30} />
-              <span className="mx-2">
-                {order?.isPaid ? "Pagada" : "No pagada"}
-              </span>
-            </div>
+            {/* Se recomienda utilizar un componente para el estado de la orden */}
+            {/* order!.isPaid es seguro porque ya verificamos que ok sea true*/}
+            {/* <OrderStatus isPaid={order?.isPaid || false} /> */}
+            <OrderStatus isPaid={order!.isPaid} />
 
             {/* Itera con orderItems de la orden */}
             {order?.orderItems.map((item) => (
@@ -152,7 +143,15 @@ export const OrderSection = async ({ params }: Props) => {
                 </span>
               </div> */}
               {/* Aqui debe mostrar el boton de paypal y se le pasa las props */}
-              <PaypalButton amount={order?.total!} orderIdProp={order?.id!} />
+              {order?.isPaid ? (
+                // Si esta pagada, no mostrara el boton de paypal
+                <OrderStatus isPaid={order.isPaid} />
+              ) : (
+                <PaypalButton amount={order?.total!} orderIdProp={order?.id!} />
+              )}
+
+              {/* Recomendación: No se recomienda confiar en los datos que envia el cliente como modificar el precio total,
+              es por ello que se toma la cantidad, el ID del producto y el precio (esos 2 ultimos de la base de datos) */}
             </div>
           </div>
         </div>

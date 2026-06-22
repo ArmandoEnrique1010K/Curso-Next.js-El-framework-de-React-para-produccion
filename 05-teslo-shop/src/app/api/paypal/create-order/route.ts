@@ -7,21 +7,30 @@ import { NextResponse } from "next/server";
 // }
 
 export async function POST(request: Request) {
-  const { orderId, amount } = await request.json();
+  const { amount, orderId } = await request.json();
 
-  const auth = await fetch("https://api-m.sandbox.paypal.com/v1/oauth2/token", {
-    method: "POST",
-    headers: {
-      Authorization:
-        "Basic " +
-        Buffer.from(
-          process.env.PAYPAL_CLIENT_ID + ":" + process.env.PAYPAL_SECRET,
-        ).toString("base64"),
+  // 1. AUTH
+  const authRes = await fetch(
+    "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+    {
+      method: "POST",
+      headers: {
+        Authorization:
+          "Basic " +
+          Buffer.from(
+            process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID +
+              ":" +
+              process.env.PAYPAL_SECRET,
+          ).toString("base64"),
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: "grant_type=client_credentials",
     },
-    body: "grant_type=client_credentials",
-  }).then((r) => r.json());
+  );
+  const auth = await authRes.json();
 
-  const order = await fetch(
+  // 2. CREATE ORDER EN PAYPAL
+  const orderRes = await fetch(
     "https://api-m.sandbox.paypal.com/v2/checkout/orders",
     {
       method: "POST",
@@ -33,18 +42,26 @@ export async function POST(request: Request) {
         intent: "CAPTURE",
         purchase_units: [
           {
-            invoice_id: orderId,
             amount: {
               currency_code: "USD",
               value: amount.toString(),
             },
+            // Aqui se coloca el id de la orden en la base de datos
+            invoice_id: orderId,
           },
         ],
       }),
     },
-  ).then((r) => r.json());
+  );
+
+  const order = await orderRes.json();
+
+  // console.log("PAYPAL ORDER:", order);
 
   return NextResponse.json({
-    orderId: order.id, // 👈 ESTE ES EL REAL
+    // ID de paypal
+    orderId: order.id, // ESTE ES EL ÚNICO VALIDO
+    // ID de la base de datos
+    dbOrderId: orderId,
   });
 }

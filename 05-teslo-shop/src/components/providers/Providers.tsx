@@ -14,7 +14,7 @@ export const Providers = ({ children }: Props) => {
   // para que los componentes hijos puedan acceder a la información de la sesión
 
   // Imprime el valor de la variable de entorno (para prueba)
-  console.log(process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID);
+  // console.log(process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID);
 
   // A su vez tambien debe aparecer un error en la consola de que se hizo una peticion de tipo POST
   // a https://www.sandbox.paypal.com/xoplatform/logger/api/logger?disableSetCookie=true, solamente
