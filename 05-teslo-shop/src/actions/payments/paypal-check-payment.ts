@@ -78,6 +78,7 @@ export const paypalCheckPayment = async (paypalTransactionId: string) => {
 
     return {
       ok: true,
+      message: "Pago verificado",
     };
   } catch (error) {
     console.log(error);
@@ -86,11 +87,6 @@ export const paypalCheckPayment = async (paypalTransactionId: string) => {
       message: "500 - El pago no se pudo realizar",
     };
   }
-
-  return {
-    ok: true,
-    message: "Pago verificado",
-  };
 };
 
 // Funcion auxiliar para obtener el Bearer Token

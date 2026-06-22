@@ -9,6 +9,7 @@ import {
 } from "@paypal/react-paypal-js/sdk-v6";
 import { paypalCheckPayment, setTransactionId } from "@/actions";
 import { PurchaseUnit } from "../../interfaces/paypal.interface";
+import { paypalCreateOrder } from "@/actions/payments/paypal-create-order";
 
 interface Props {
   orderIdProp: string;
@@ -67,20 +68,21 @@ export const PaypalButton = ({ orderIdProp, amount }: Props) => {
     try {
       console.log({ orderIdProp, amount });
 
-      const res = await fetch("/api/paypal/create-order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          // Debe ser el id de la orden en la base de datos
-          // Una vez que una orden ya sea pagado, no se volvera a pagar
-          orderId: orderIdProp,
-          amount: amount,
-        }),
-      });
+      // const res = await fetch("/api/paypal/create-order", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     // Debe ser el id de la orden en la base de datos
+      //     // Una vez que una orden ya sea pagado, no se volvera a pagar
+      //     orderId: orderIdProp,
+      //     amount: amount,
+      //   }),
+      // });
+      // const data = await res.json();
 
-      const data = await res.json();
+      const data = await paypalCreateOrder(orderIdProp, amount);
 
       // Imprime el ID generado (no confundir orderId con orderIdProp, que ese ultimo
       // es el id de la orden en la base de datos)
@@ -132,12 +134,18 @@ export const PaypalButton = ({ orderIdProp, amount }: Props) => {
         createOrder={createOrder}
         // Si se realizo de forma exitosa el flujo de pago, se va a ejecutar esta función
         onApprove={onApprove}
+        // Modo de presentación de la ventana de pago
+        // "auto", "popup" (ventana emergente), "modal" (ventana modal incrustado),
+        // "redirect" (redirección al sitio de paypal)
+        presentationMode="modal"
       ></PayPalOneTimePaymentButton>
 
       {/* Boton para pagar con tarjeta de debito o credito */}
       <PayPalGuestPaymentButton
         createOrder={createOrder}
         onApprove={onApprove}
+        // Abre una ventana modal (no se puede cambiar el modo de presentación), en donde
+        // el usuario tendra que introducir datos de su tarjeta
       ></PayPalGuestPaymentButton>
     </div>
   );
